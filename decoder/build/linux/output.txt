@@ -1,0 +1,110 @@
+mkdir -p /home/rhys/Work/OpenCSD/decoder/lib/builddir
+cd /home/rhys/Work/OpenCSD/decoder/build/linux/ref_trace_decode_lib && make
+make[1]: Entering directory '/home/rhys/Work/OpenCSD/decoder/build/linux/ref_trace_decode_lib'
+mkdir -p ./builddir
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_code_follower.cpp -o builddir/ocsd_code_follower.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_dcd_tree.cpp -o builddir/ocsd_dcd_tree.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_error.cpp -o builddir/ocsd_error.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_error_logger.cpp -o builddir/ocsd_error_logger.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_gen_elem_list.cpp -o builddir/ocsd_gen_elem_list.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_gen_elem_stack.cpp -o builddir/ocsd_gen_elem_stack.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_lib_dcd_register.cpp -o builddir/ocsd_lib_dcd_register.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_msg_logger.cpp -o builddir/ocsd_msg_logger.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ocsd_version.cpp -o builddir/ocsd_version.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/trc_component.cpp -o builddir/trc_component.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/trc_core_arch_map.cpp -o builddir/trc_core_arch_map.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/trc_frame_deformatter.cpp -o builddir/trc_frame_deformatter.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/trc_gen_elem.cpp -o builddir/trc_gen_elem.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/trc_printable_elem.cpp -o builddir/trc_printable_elem.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/trc_ret_stack.cpp -o builddir/trc_ret_stack.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv3/trc_cmp_cfg_etmv3.cpp -o builddir/trc_cmp_cfg_etmv3.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv3/trc_pkt_decode_etmv3.cpp -o builddir/trc_pkt_decode_etmv3.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv3/trc_pkt_elem_etmv3.cpp -o builddir/trc_pkt_elem_etmv3.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv3/trc_pkt_proc_etmv3.cpp -o builddir/trc_pkt_proc_etmv3.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv3/trc_pkt_proc_etmv3_impl.cpp -o builddir/trc_pkt_proc_etmv3_impl.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv4/trc_cmp_cfg_etmv4.cpp -o builddir/trc_cmp_cfg_etmv4.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv4/trc_etmv4_stack_elem.cpp -o builddir/trc_etmv4_stack_elem.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv4/trc_pkt_proc_etmv4i.cpp -o builddir/trc_pkt_proc_etmv4i.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv4/trc_pkt_decode_etmv4i.cpp -o builddir/trc_pkt_decode_etmv4i.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/etmv4/trc_pkt_elem_etmv4i.cpp -o builddir/trc_pkt_elem_etmv4i.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ete/trc_cmp_cfg_ete.cpp -o builddir/trc_cmp_cfg_ete.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/i_dec/trc_i_decode.cpp -o builddir/trc_i_decode.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/i_dec/trc_idec_arminst.cpp -o builddir/trc_idec_arminst.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/mem_acc/trc_mem_acc_mapper.cpp -o builddir/trc_mem_acc_mapper.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/mem_acc/trc_mem_acc_bufptr.cpp -o builddir/trc_mem_acc_bufptr.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/mem_acc/trc_mem_acc_file.cpp -o builddir/trc_mem_acc_file.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/mem_acc/trc_mem_acc_base.cpp -o builddir/trc_mem_acc_base.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/mem_acc/trc_mem_acc_cb.cpp -o builddir/trc_mem_acc_cb.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/mem_acc/trc_mem_acc_cache.cpp -o builddir/trc_mem_acc_cache.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/stm/trc_pkt_elem_stm.cpp -o builddir/trc_pkt_elem_stm.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/stm/trc_pkt_proc_stm.cpp -o builddir/trc_pkt_proc_stm.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/stm/trc_pkt_decode_stm.cpp -o builddir/trc_pkt_decode_stm.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ptm/trc_cmp_cfg_ptm.cpp -o builddir/trc_cmp_cfg_ptm.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ptm/trc_pkt_elem_ptm.cpp -o builddir/trc_pkt_elem_ptm.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ptm/trc_pkt_proc_ptm.cpp -o builddir/trc_pkt_proc_ptm.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/ptm/trc_pkt_decode_ptm.cpp -o builddir/trc_pkt_decode_ptm.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/pkt_printers/raw_frame_printer.cpp -o builddir/raw_frame_printer.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source -MMD  /home/rhys/Work/OpenCSD/decoder/source/pkt_printers/trc_print_fact.cpp -o builddir/trc_print_fact.o
+ar rv /home/rhys/Work/OpenCSD/decoder/lib/builddir/libopencsd.a ./builddir/ocsd_code_follower.o ./builddir/ocsd_dcd_tree.o ./builddir/ocsd_error.o ./builddir/ocsd_error_logger.o ./builddir/ocsd_gen_elem_list.o ./builddir/ocsd_gen_elem_stack.o ./builddir/ocsd_lib_dcd_register.o ./builddir/ocsd_msg_logger.o ./builddir/ocsd_version.o ./builddir/trc_component.o ./builddir/trc_core_arch_map.o ./builddir/trc_frame_deformatter.o ./builddir/trc_gen_elem.o ./builddir/trc_printable_elem.o ./builddir/trc_ret_stack.o ./builddir/trc_cmp_cfg_etmv3.o ./builddir/trc_pkt_decode_etmv3.o ./builddir/trc_pkt_elem_etmv3.o ./builddir/trc_pkt_proc_etmv3.o ./builddir/trc_pkt_proc_etmv3_impl.o ./builddir/trc_cmp_cfg_etmv4.o ./builddir/trc_etmv4_stack_elem.o ./builddir/trc_pkt_proc_etmv4i.o ./builddir/trc_pkt_decode_etmv4i.o ./builddir/trc_pkt_elem_etmv4i.o ./builddir/trc_cmp_cfg_ete.o ./builddir/trc_i_decode.o ./builddir/trc_idec_arminst.o ./builddir/trc_mem_acc_mapper.o ./builddir/trc_mem_acc_bufptr.o ./builddir/trc_mem_acc_file.o ./builddir/trc_mem_acc_base.o ./builddir/trc_mem_acc_cb.o ./builddir/trc_mem_acc_cache.o ./builddir/trc_pkt_elem_stm.o ./builddir/trc_pkt_proc_stm.o ./builddir/trc_pkt_decode_stm.o ./builddir/trc_cmp_cfg_ptm.o ./builddir/trc_pkt_elem_ptm.o ./builddir/trc_pkt_proc_ptm.o ./builddir/trc_pkt_decode_ptm.o ./builddir/raw_frame_printer.o ./builddir/trc_print_fact.o
+ar: creating /home/rhys/Work/OpenCSD/decoder/lib/builddir/libopencsd.a
+a - ./builddir/ocsd_code_follower.o
+a - ./builddir/ocsd_dcd_tree.o
+a - ./builddir/ocsd_error.o
+a - ./builddir/ocsd_error_logger.o
+a - ./builddir/ocsd_gen_elem_list.o
+a - ./builddir/ocsd_gen_elem_stack.o
+a - ./builddir/ocsd_lib_dcd_register.o
+a - ./builddir/ocsd_msg_logger.o
+a - ./builddir/ocsd_version.o
+a - ./builddir/trc_component.o
+a - ./builddir/trc_core_arch_map.o
+a - ./builddir/trc_frame_deformatter.o
+a - ./builddir/trc_gen_elem.o
+a - ./builddir/trc_printable_elem.o
+a - ./builddir/trc_ret_stack.o
+a - ./builddir/trc_cmp_cfg_etmv3.o
+a - ./builddir/trc_pkt_decode_etmv3.o
+a - ./builddir/trc_pkt_elem_etmv3.o
+a - ./builddir/trc_pkt_proc_etmv3.o
+a - ./builddir/trc_pkt_proc_etmv3_impl.o
+a - ./builddir/trc_cmp_cfg_etmv4.o
+a - ./builddir/trc_etmv4_stack_elem.o
+a - ./builddir/trc_pkt_proc_etmv4i.o
+a - ./builddir/trc_pkt_decode_etmv4i.o
+a - ./builddir/trc_pkt_elem_etmv4i.o
+a - ./builddir/trc_cmp_cfg_ete.o
+a - ./builddir/trc_i_decode.o
+a - ./builddir/trc_idec_arminst.o
+a - ./builddir/trc_mem_acc_mapper.o
+a - ./builddir/trc_mem_acc_bufptr.o
+a - ./builddir/trc_mem_acc_file.o
+a - ./builddir/trc_mem_acc_base.o
+a - ./builddir/trc_mem_acc_cb.o
+a - ./builddir/trc_mem_acc_cache.o
+a - ./builddir/trc_pkt_elem_stm.o
+a - ./builddir/trc_pkt_proc_stm.o
+a - ./builddir/trc_pkt_decode_stm.o
+a - ./builddir/trc_cmp_cfg_ptm.o
+a - ./builddir/trc_pkt_elem_ptm.o
+a - ./builddir/trc_pkt_proc_ptm.o
+a - ./builddir/trc_pkt_decode_ptm.o
+a - ./builddir/raw_frame_printer.o
+a - ./builddir/trc_print_fact.o
+g++ -Wl,-z,defs -shared -o /home/rhys/Work/OpenCSD/decoder/lib/builddir/libopencsd.so.1.4.0 -Wl,-soname,libopencsd.so.1 ./builddir/ocsd_code_follower.o ./builddir/ocsd_dcd_tree.o ./builddir/ocsd_error.o ./builddir/ocsd_error_logger.o ./builddir/ocsd_gen_elem_list.o ./builddir/ocsd_gen_elem_stack.o ./builddir/ocsd_lib_dcd_register.o ./builddir/ocsd_msg_logger.o ./builddir/ocsd_version.o ./builddir/trc_component.o ./builddir/trc_core_arch_map.o ./builddir/trc_frame_deformatter.o ./builddir/trc_gen_elem.o ./builddir/trc_printable_elem.o ./builddir/trc_ret_stack.o ./builddir/trc_cmp_cfg_etmv3.o ./builddir/trc_pkt_decode_etmv3.o ./builddir/trc_pkt_elem_etmv3.o ./builddir/trc_pkt_proc_etmv3.o ./builddir/trc_pkt_proc_etmv3_impl.o ./builddir/trc_cmp_cfg_etmv4.o ./builddir/trc_etmv4_stack_elem.o ./builddir/trc_pkt_proc_etmv4i.o ./builddir/trc_pkt_decode_etmv4i.o ./builddir/trc_pkt_elem_etmv4i.o ./builddir/trc_cmp_cfg_ete.o ./builddir/trc_i_decode.o ./builddir/trc_idec_arminst.o ./builddir/trc_mem_acc_mapper.o ./builddir/trc_mem_acc_bufptr.o ./builddir/trc_mem_acc_file.o ./builddir/trc_mem_acc_base.o ./builddir/trc_mem_acc_cb.o ./builddir/trc_mem_acc_cache.o ./builddir/trc_pkt_elem_stm.o ./builddir/trc_pkt_proc_stm.o ./builddir/trc_pkt_decode_stm.o ./builddir/trc_cmp_cfg_ptm.o ./builddir/trc_pkt_elem_ptm.o ./builddir/trc_pkt_proc_ptm.o ./builddir/trc_pkt_decode_ptm.o ./builddir/raw_frame_printer.o ./builddir/trc_print_fact.o
+( cd /home/rhys/Work/OpenCSD/decoder/lib/builddir;  ln -sf libopencsd.so.1.4.0 libopencsd.so.1 )
+( cd /home/rhys/Work/OpenCSD/decoder/lib/builddir;  ln -sf libopencsd.so.1 libopencsd.so )
+make[1]: Leaving directory '/home/rhys/Work/OpenCSD/decoder/build/linux/ref_trace_decode_lib'
+mkdir -p /home/rhys/Work/OpenCSD/decoder/lib/builddir
+cd /home/rhys/Work/OpenCSD/decoder/build/linux/rctdl_c_api_lib && make
+make[1]: Entering directory '/home/rhys/Work/OpenCSD/decoder/build/linux/rctdl_c_api_lib'
+mkdir -p ./builddir
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source/c_api -MMD /home/rhys/Work/OpenCSD/decoder/source/c_api/ocsd_c_api.cpp -o builddir/ocsd_c_api.o
+g++  -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11 -O2 -DNDEBUG -I/home/rhys/Work/OpenCSD/decoder/include -I/home/rhys/Work/OpenCSD/decoder/source/c_api -MMD /home/rhys/Work/OpenCSD/decoder/source/c_api/ocsd_c_api_custom_obj.cpp -o builddir/ocsd_c_api_custom_obj.o
+ar rv /home/rhys/Work/OpenCSD/decoder/lib/builddir/libopencsd_c_api.a ./builddir/ocsd_c_api.o ./builddir/ocsd_c_api_custom_obj.o
+ar: creating /home/rhys/Work/OpenCSD/decoder/lib/builddir/libopencsd_c_api.a
+a - ./builddir/ocsd_c_api.o
+a - ./builddir/ocsd_c_api_custom_obj.o
+g++ -Wl,-z,defs -shared -o /home/rhys/Work/OpenCSD/decoder/lib/builddir/libopencsd_c_api.so.1.4.0 -Wl,-soname,libopencsd_c_api.so.1 ./builddir/ocsd_c_api.o ./builddir/ocsd_c_api_custom_obj.o -L/home/rhys/Work/OpenCSD/decoder/lib/builddir -lopencsd
+( cd /home/rhys/Work/OpenCSD/decoder/lib/builddir; ln -sf libopencsd_c_api.so.1.4.0 libopencsd_c_api.so.1 )
+( cd /home/rhys/Work/OpenCSD/decoder/lib/builddir; ln -sf libopencsd_c_api.so.1 libopencsd_c_api.so )
+make[1]: Leaving directory '/home/rhys/Work/OpenCSD/decoder/build/linux/rctdl_c_api_lib'
