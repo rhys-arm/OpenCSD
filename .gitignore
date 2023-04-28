@@ -80,3 +80,4 @@ decoder/docs/html/*
 *.ipdb
 decoder/tests/results*
 *.recipe
+.vscode
