@@ -49,3 +49,5 @@ else()
 endif()
 
 add_subdirectory(decoder/build/ref_trace_decode_lib)
+add_subdirectory(decoder/tests/build/snapshot_parser_lib)
+add_subdirectory(decoder/tests/build/trc_pkt_lister)
