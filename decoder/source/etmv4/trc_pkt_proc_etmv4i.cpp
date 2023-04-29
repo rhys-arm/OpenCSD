@@ -34,6 +34,7 @@
 
 #include "opencsd/etmv4/trc_pkt_proc_etmv4.h"
 #include "common/ocsd_error.h"
+#include <iostream>
 
 #ifdef __GNUC__
  // G++ doesn't like the ## pasting
@@ -125,9 +126,25 @@ ocsd_datapath_resp_t TrcPktProcEtmV4I::processData(  const ocsd_trc_index_t inde
                     while (!m_trcIn.empty() && (m_process_state == PROC_DATA))
                     {
                         nextByte = m_trcIn.peekNextByte();
+                        // fprintf(stderr, "0x%x\n", nextByte);
                         m_trcIn.copyByteToPkt();  // move next byte into the packet
                         (this->*m_pIPktFn)(nextByte);
+                        // fprintf(stderr, "m_trcIn.empty() ? %d\n", m_trcIn.empty());
+                        // if (m_process_state == PROC_HDR)
+                        //     fprintf(stderr, "PROC_HDR\n");
+                        // else if (m_process_state == PROC_DATA)
+                        //     fprintf(stderr, "PROC_DATA\n");
+                        // else if (m_process_state == SEND_PKT)
+                        //     fprintf(stderr, "SEND_PKT\n");
+                        // else if (m_process_state == SEND_UNSYNCED)
+                        //     fprintf(stderr, "SEND_UNSYNCED\n");
+                        // else if (m_process_state == PROC_ERR)
+                        //     fprintf(stderr, "PROC_ERR\n");
+                        // else
+                        //     fprintf(stderr, "UNKNOWN\n");
+                        //fprintf(stderr, "m_process_state == PROC_DATA ? %d\n", (m_process_state == PROC_DATA));
                     }
+                    // fprintf(stderr, "\n");
                     break;
 
                 case SEND_PKT:
