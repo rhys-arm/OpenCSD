@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.24)
 project("OpenCSD")
 
 function(set_compiler_release_optimisation_level flags_var level)
@@ -53,6 +53,7 @@ elseif(WIN32)
 else()
     message(FATAL_ERROR "Unsupported arch")
 endif()
+cmake_print_variables(COMMON_LINKER_FLAGS)
 
 add_subdirectory(decoder/build/ref_trace_decode_lib)
 add_subdirectory(decoder/tests/build/snapshot_parser_lib)
