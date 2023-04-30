@@ -133,7 +133,7 @@ static int initDataBuffers()
     static const char *default_base_snapshot_path = "..\\..\\..\\snapshots";
     static const char *juno_snapshot = "\\juno_r1_1\\";
 #else
-    static const char *default_base_snapshot_path = "../../../snapshots";
+    static const char *default_base_snapshot_path = "decoder/tests/snapshots";
     static const char *juno_snapshot = "/juno_r1_1/";
 #endif
 
