@@ -72,23 +72,29 @@ set(src_files
     ${PKTPRNTOBJ_src_files}
 )
 
-add_library(opencsd SHARED ${src_files})
+if (UNIX)
+    add_library(opencsd SHARED ${src_files})
+endif()
 add_library(opencsd_static STATIC ${src_files})
 
 set(incl_dirs
     ${OPENCSD_SRCROOT_DIR}/decoder/include
 )
-target_include_directories(opencsd PRIVATE
-    ${incl_dirs}
-)
+if (UNIX)
+    target_include_directories(opencsd PRIVATE
+        ${incl_dirs}
+    )
+endif()
 target_include_directories(opencsd_static PRIVATE
     ${incl_dirs}
 )
 
-target_link_options(opencsd PRIVATE "LINKER:${COMMON_LINKER_FLAGS}")
+if (UNIX)
+    target_link_options(opencsd PRIVATE "LINKER:${COMMON_LINKER_FLAGS}")
 
-set_target_properties(opencsd
-    PROPERTIES SOVERSION 1
-)
+    set_target_properties(opencsd
+        PROPERTIES SOVERSION 1
+    )
 
-set_target_properties(opencsd_static PROPERTIES OUTPUT_NAME opencsd)
+    set_target_properties(opencsd_static PROPERTIES OUTPUT_NAME opencsd)
+endif()

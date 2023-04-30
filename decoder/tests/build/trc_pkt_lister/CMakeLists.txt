@@ -14,4 +14,6 @@ target_link_libraries(trc_pkt_lister PRIVATE
     opencsd_static
 )
 
-target_link_options(trc_pkt_lister PRIVATE "LINKER:${COMMON_LINKER_FLAGS}")
+if(UNIX)
+    target_link_options(trc_pkt_lister PRIVATE "LINKER:${COMMON_LINKER_FLAGS}")
+endif()
