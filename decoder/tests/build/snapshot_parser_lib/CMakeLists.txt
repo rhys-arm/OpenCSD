@@ -14,4 +14,6 @@ target_include_directories(snapshot_parser PRIVATE
     ${OPENCSD_SRCROOT_DIR}/decoder/tests/snapshot_parser_lib/include
 )
 
-target_link_options(snapshot_parser PRIVATE "LINKER:${COMMON_LINKER_FLAGS}")
+if(UNIX)
+    target_link_options(snapshot_parser PRIVATE "LINKER:${COMMON_LINKER_FLAGS}")
+endif()

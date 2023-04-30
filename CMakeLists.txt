@@ -19,7 +19,7 @@ function(set_compiler_release_optimisation_level flags_var level)
     set(${flags_var} ${flags_var_contents} PARENT_SCOPE)
 endfunction()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
+if(UNIX AND CMAKE_BUILD_TYPE STREQUAL "Release")
     set_compiler_release_optimisation_level(CMAKE_C_FLAGS_RELEASE "-O2")
     set_compiler_release_optimisation_level(CMAKE_CXX_FLAGS_RELEASE "-O2")
 endif()
@@ -31,10 +31,12 @@ include(CMakePrintHelpers)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# -std=c++XX rather than -std=gnu++XX
-set(CMAKE_CXX_EXTENSIONS OFF)
-# rpath can be convenient for running binaries locally without needing LD_LIBRARY_PATH, however because it places the path inside the binaries, it harms build reproducibility
-set(CMAKE_SKIP_RPATH TRUE)
+if(UNIX)
+    # -std=c++XX rather than -std=gnu++XX
+    set(CMAKE_CXX_EXTENSIONS OFF)
+    # rpath can be convenient for running binaries locally without needing LD_LIBRARY_PATH, however because it places the path inside the binaries, it harms build reproducibility
+    set(CMAKE_SKIP_RPATH TRUE)
+endif()
 
 if(APPLE)
     set(COMMON_LINKER_FLAGS
@@ -43,6 +45,10 @@ if(APPLE)
 elseif(UNIX)
     set(COMMON_LINKER_FLAGS
         "-z,defs"
+    )
+elseif(WIN32)
+    set(COMMON_LINKER_FLAGS
+        ""
     )
 else()
     message(FATAL_ERROR "Unsupported arch")
