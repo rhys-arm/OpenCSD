@@ -35,7 +35,7 @@ if(UNIX)
     # -std=c++XX rather than -std=gnu++XX
     set(CMAKE_CXX_EXTENSIONS OFF)
     # rpath can be convenient for running binaries locally without needing LD_LIBRARY_PATH, however because it places the path inside the binaries, it harms build reproducibility
-    set(CMAKE_SKIP_RPATH TRUE)
+    #set(CMAKE_SKIP_RPATH TRUE)
 endif()
 
 if(APPLE)
@@ -56,6 +56,9 @@ endif()
 cmake_print_variables(COMMON_LINKER_FLAGS)
 
 add_subdirectory(decoder/build/ref_trace_decode_lib)
+add_subdirectory(decoder/build/rctdl_c_api_lib)
 add_subdirectory(decoder/tests/build/snapshot_parser_lib)
 add_subdirectory(decoder/tests/build/trc_pkt_lister)
 add_subdirectory(decoder/tests/build/mem_buffer_eg)
+add_subdirectory(decoder/tests/build/echo_test_dcd_lib)
+add_subdirectory(decoder/tests/build/c_api_pkt_print_test)

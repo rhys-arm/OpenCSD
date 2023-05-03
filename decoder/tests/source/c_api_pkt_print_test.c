@@ -67,7 +67,7 @@ const char *default_base_snapshot_path="..\\..\\..\\snapshots";
 const char *juno_snapshot = "\\juno_r1_1\\";
 const char *tc2_snapshot = "\\TC2\\";
 #else
-const char *default_base_snapshot_path = "../../snapshots";
+const char *default_base_snapshot_path = "decoder/tests/snapshots";
 const char *juno_snapshot = "/juno_r1_1/";
 const char *tc2_snapshot = "/TC2/";
 #endif
