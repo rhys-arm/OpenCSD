@@ -124,10 +124,10 @@ static const char *s_marker_t[] = {
 void OcsdTraceElement::toString(std::string &str) const
 {
 
-    str = staticToString(this);
+    str = ocsd_generic_trace_elem_to_string(this);
 }
 
-std::string OcsdTraceElement::staticToString(const ocsd_generic_trace_elem* elem)
+std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* elem)
 {
     std::ostringstream oss;
     int num_str = sizeof(s_elem_descs) / sizeof(s_elem_descs[0]);
@@ -205,7 +205,7 @@ std::string OcsdTraceElement::staticToString(const ocsd_generic_trace_elem* elem
             break;
 
         case OCSD_GEN_TRC_ELEM_SWTRACE:
-            printSWInfoPkt(elem, oss);
+            ocsd_generic_trace_elem_printSWInfoPkt(elem, oss);
             break;
 
         case OCSD_GEN_TRC_ELEM_EVENT:
@@ -254,7 +254,7 @@ OcsdTraceElement &OcsdTraceElement::operator =(const ocsd_generic_trace_elem* p_
 }
 
 
-void OcsdTraceElement::printSWInfoPkt(const ocsd_generic_trace_elem* elem, std::ostringstream & oss)
+void ocsd_generic_trace_elem_printSWInfoPkt(const ocsd_generic_trace_elem* elem, std::ostringstream & oss)
 {
     if (!elem->sw_trace_info.swt_global_err)
     {
