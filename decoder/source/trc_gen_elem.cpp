@@ -122,119 +122,125 @@ static const char *s_marker_t[] = {
 
 void OcsdTraceElement::toString(std::string &str) const
 {
+
+    str = staticToString(this);
+}
+
+std::string OcsdTraceElement::staticToString(const ocsd_generic_trace_elem* elem)
+{
     std::ostringstream oss;
     int num_str = sizeof(s_elem_descs) / sizeof(s_elem_descs[0]);
-    int typeIdx = (int)this->elem_type;
+    int typeIdx = (int)elem->elem_type;
     if(typeIdx < num_str)
     {
         oss << s_elem_descs[typeIdx][0] << "(";
-        switch(elem_type)
+        switch(elem->elem_type)
         {
         case OCSD_GEN_TRC_ELEM_INSTR_RANGE:
-            oss << "exec range=0x" << std::hex << st_addr << ":[0x" << en_addr << "] ";
-            oss << "num_i(" << std::dec << num_instr_range << ") ";
-            oss << "last_sz(" << last_instr_sz << ") ";
-            oss << "(ISA=" << s_isa_str[(int)isa] << ") ";
-            oss << ((last_instr_exec == 1) ? "E " : "N ");
-            if((int)last_i_type < T_SIZE)
-                oss << instr_type[last_i_type];
-            if((last_i_subtype != OCSD_S_INSTR_NONE) && ((int)last_i_subtype < ST_SIZE))
-                oss << instr_sub_type[last_i_subtype];
-            if (last_instr_cond)
+            oss << "exec range=0x" << std::hex << elem->st_addr << ":[0x" << elem->en_addr << "] ";
+            oss << "num_i(" << std::dec << elem->num_instr_range << ") ";
+            oss << "last_sz(" << elem->last_instr_sz << ") ";
+            oss << "(ISA=" << s_isa_str[(int)elem->isa] << ") ";
+            oss << ((elem->last_instr_exec == 1) ? "E " : "N ");
+            if((int)elem->last_i_type < T_SIZE)
+                oss << instr_type[elem->last_i_type];
+            if((elem->last_i_subtype != OCSD_S_INSTR_NONE) && ((int)elem->last_i_subtype < ST_SIZE))
+                oss << instr_sub_type[elem->last_i_subtype];
+            if (elem->last_instr_cond)
                 oss << " <cond>";
             break;
 
         case OCSD_GEN_TRC_ELEM_ADDR_NACC:
-            oss << " 0x" << std::hex << st_addr << " ";
+            oss << " 0x" << std::hex << elem->st_addr << " ";
             break;
 
         case OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH:
-            oss << "first 0x" << std::hex << st_addr << ":[next 0x" << en_addr << "] ";
-            oss << "num_i(" << std::dec << num_instr_range << ") ";
+            oss << "first 0x" << std::hex << elem->st_addr << ":[next 0x" << elem->en_addr << "] ";
+            oss << "num_i(" << std::dec << elem->num_instr_range << ") ";
             break;
 
         case OCSD_GEN_TRC_ELEM_EXCEPTION:
-            if (excep_ret_addr == 1)
+            if (elem->excep_ret_addr == 1)
             {
-                oss << "pref ret addr:0x" << std::hex << en_addr; 
-                if (excep_ret_addr_br_tgt)
+                oss << "pref ret addr:0x" << std::hex << elem->en_addr; 
+                if (elem->excep_ret_addr_br_tgt)
                 {
                     oss << " [addr also prev br tgt]";
                 }
                 oss << "; ";
             }
-            oss << "excep num (0x" << std::setfill('0') << std::setw(2) << std::hex << exception_number << ") ";
+            oss << "excep num (0x" << std::setfill('0') << std::setw(2) << std::hex << elem->exception_number << ") ";
             break;
 
         case OCSD_GEN_TRC_ELEM_PE_CONTEXT:
-            oss << "(ISA=" << s_isa_str[(int)isa] << ") ";
-            if((context.exception_level > ocsd_EL_unknown) && (context.el_valid))
+            oss << "(ISA=" << s_isa_str[(int)elem->isa] << ") ";
+            if((elem->context.exception_level > ocsd_EL_unknown) && (elem->context.el_valid))
             {
-                oss << "EL" << std::dec << (int)(context.exception_level);
+                oss << "EL" << std::dec << (int)(elem->context.exception_level);
             }
-            switch (context.security_level) 
+            switch (elem->context.security_level) 
             {
             case ocsd_sec_secure: oss << "S; "; break;
             case ocsd_sec_nonsecure: oss << "N; "; break;
             case ocsd_sec_root: oss << "Root; "; break;
             case ocsd_sec_realm: oss << "Realm; "; break;
             }
-            oss  << (context.bits64 ? "64-bit; " : "32-bit; ");
-            if(context.vmid_valid)
-                oss << "VMID=0x" << std::hex << context.vmid << "; ";
-            if(context.ctxt_id_valid)
-                oss << "CTXTID=0x" << std::hex << context.context_id << "; ";
+            oss  << (elem->context.bits64 ? "64-bit; " : "32-bit; ");
+            if(elem->context.vmid_valid)
+                oss << "VMID=0x" << std::hex << elem->context.vmid << "; ";
+            if(elem->context.ctxt_id_valid)
+                oss << "CTXTID=0x" << std::hex << elem->context.context_id << "; ";
             break;
 
         case  OCSD_GEN_TRC_ELEM_TRACE_ON:
-            oss << " [" << s_trace_on_reason[trace_on_reason] << "]";
+            oss << " [" << s_trace_on_reason[elem->trace_on_reason] << "]";
             break;
 
         case OCSD_GEN_TRC_ELEM_TIMESTAMP:
-            oss << " [ TS=0x" << std::setfill('0') << std::setw(12) << std::hex << timestamp << "]; "; 
+            oss << " [ TS=0x" << std::setfill('0') << std::setw(12) << std::hex << elem->timestamp << "]; "; 
             break;
 
         case OCSD_GEN_TRC_ELEM_SWTRACE:
-            printSWInfoPkt(oss);
+            printSWInfoPkt(elem, oss);
             break;
 
         case OCSD_GEN_TRC_ELEM_EVENT:
-            if(trace_event.ev_type == EVENT_TRIGGER)
+            if(elem->trace_event.ev_type == EVENT_TRIGGER)
                 oss << " Trigger; ";
-            else if(trace_event.ev_type == EVENT_NUMBERED)
-                oss << " Numbered:" << std::dec << trace_event.ev_number << "; ";
+            else if(elem->trace_event.ev_type == EVENT_NUMBERED)
+                oss << " Numbered:" << std::dec << elem->trace_event.ev_number << "; ";
             break;
 
         case OCSD_GEN_TRC_ELEM_EO_TRACE:
         case OCSD_GEN_TRC_ELEM_NO_SYNC:
-            if (unsync_eot_info <= UNSYNC_EOT)
-                oss << " [" << s_unsync_reason[unsync_eot_info] << "]";
+            if (elem->unsync_eot_info <= UNSYNC_EOT)
+                oss << " [" << s_unsync_reason[elem->unsync_eot_info] << "]";
             break;
 
         case OCSD_GEN_TRC_ELEM_SYNC_MARKER:
-            oss << " [" << s_marker_t[sync_marker.type] << "(0x" << std::setfill('0') << std::setw(8) << std::hex << sync_marker.value << ")]";
+            oss << " [" << s_marker_t[elem->sync_marker.type] << "(0x" << std::setfill('0') << std::setw(8) << std::hex << elem->sync_marker.value << ")]";
             break;
 
         case OCSD_GEN_TRC_ELEM_MEMTRANS:
-            if (mem_trans <= OCSD_MEM_TRANS_FAIL)
-                oss << s_transaction_type[mem_trans];
+            if (elem->mem_trans <= OCSD_MEM_TRANS_FAIL)
+                oss << s_transaction_type[elem->mem_trans];
             break;
 
         case OCSD_GEN_TRC_ELEM_INSTRUMENTATION:
-            oss << "EL" << std::dec << (int)sw_ite.el << "; 0x" << std::setfill('0') << std::setw(16) << std::hex << sw_ite.value;
+            oss << "EL" << std::dec << (int)elem->sw_ite.el << "; 0x" << std::setfill('0') << std::setw(16) << std::hex << elem->sw_ite.value;
             break;
 
         default: break;
         }
-        if(has_cc)
-            oss << std::dec << " [CC=" << cycle_count << "]; ";
+        if(elem->has_cc)
+            oss << std::dec << " [CC=" << elem->cycle_count << "]; ";
         oss << ")";
     }
     else
     {
         oss << "OCSD_GEN_TRC_ELEM??: index out of range.";
     }
-    str = oss.str();
+    return oss.str();
 }
 
 OcsdTraceElement &OcsdTraceElement::operator =(const ocsd_generic_trace_elem* p_elem)
@@ -244,42 +250,42 @@ OcsdTraceElement &OcsdTraceElement::operator =(const ocsd_generic_trace_elem* p_
 }
 
 
-void OcsdTraceElement::printSWInfoPkt(std::ostringstream & oss) const
+void OcsdTraceElement::printSWInfoPkt(const ocsd_generic_trace_elem* elem, std::ostringstream & oss)
 {
-    if (!sw_trace_info.swt_global_err)
+    if (!elem->sw_trace_info.swt_global_err)
     {
-        if (sw_trace_info.swt_id_valid)
+        if (elem->sw_trace_info.swt_id_valid)
         {
-            oss << " (Ma:0x" << std::setfill('0') << std::setw(2) << std::hex << sw_trace_info.swt_master_id << "; ";
-            oss << "Ch:0x" << std::setfill('0') << std::setw(2) << std::hex << sw_trace_info.swt_channel_id << ") ";
+            oss << " (Ma:0x" << std::setfill('0') << std::setw(2) << std::hex << elem->sw_trace_info.swt_master_id << "; ";
+            oss << "Ch:0x" << std::setfill('0') << std::setw(2) << std::hex << elem->sw_trace_info.swt_channel_id << ") ";
         }
         else
             oss << "(Ma:0x??; Ch:0x??" << ") ";
 
-        if (sw_trace_info.swt_payload_pkt_bitsize > 0)
+        if (elem->sw_trace_info.swt_payload_pkt_bitsize > 0)
         {
             oss << "0x" << std::setfill('0') << std::hex;
-            if (sw_trace_info.swt_payload_pkt_bitsize == 4)
+            if (elem->sw_trace_info.swt_payload_pkt_bitsize == 4)
             {
                 oss << std::setw(1);
-                oss << (uint16_t)(((uint8_t *)ptr_extended_data)[0] & 0xF);
+                oss << (uint16_t)(((uint8_t *)elem->ptr_extended_data)[0] & 0xF);
             }
             else
             {
-                switch (sw_trace_info.swt_payload_pkt_bitsize)
+                switch (elem->sw_trace_info.swt_payload_pkt_bitsize)
                 {
                 case 8:
                     // force uint8 to uint16 so oss 'sees' them as something to be stringised, rather than absolute char values
-                    oss << std::setw(2) << (uint16_t)((uint8_t *)ptr_extended_data)[0];
+                    oss << std::setw(2) << (uint16_t)((uint8_t *)elem->ptr_extended_data)[0];
                     break;
                 case 16:
-                    oss << std::setw(4) << ((uint16_t *)ptr_extended_data)[0];
+                    oss << std::setw(4) << ((uint16_t *)elem->ptr_extended_data)[0];
                     break;
                 case 32:
-                    oss << std::setw(8) << ((uint32_t *)ptr_extended_data)[0];
+                    oss << std::setw(8) << ((uint32_t *)elem->ptr_extended_data)[0];
                     break;
                 case 64:
-                    oss << std::setw(16) << ((uint64_t *)ptr_extended_data)[0];
+                    oss << std::setw(16) << ((uint64_t *)elem->ptr_extended_data)[0];
                     break;
                 default:
                     oss << "{Data Error : unsupported bit width.}";
@@ -288,15 +294,15 @@ void OcsdTraceElement::printSWInfoPkt(std::ostringstream & oss) const
             }
             oss << "; ";
         }
-        if (sw_trace_info.swt_marker_packet)
+        if (elem->sw_trace_info.swt_marker_packet)
             oss << "+Mrk ";
-        if (sw_trace_info.swt_trigger_event)
+        if (elem->sw_trace_info.swt_trigger_event)
             oss << "Trig ";
-        if (sw_trace_info.swt_has_timestamp)
-            oss << " [ TS=0x" << std::setfill('0') << std::setw(12) << std::hex << timestamp << "]; ";
-        if (sw_trace_info.swt_frequency)
+        if (elem->sw_trace_info.swt_has_timestamp)
+            oss << " [ TS=0x" << std::setfill('0') << std::setw(12) << std::hex << elem->timestamp << "]; ";
+        if (elem->sw_trace_info.swt_frequency)
             oss << "Freq";
-        if (sw_trace_info.swt_master_err)
+        if (elem->sw_trace_info.swt_master_err)
             oss << "{Master Error.}";
     }
     else
