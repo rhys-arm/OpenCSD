@@ -91,6 +91,7 @@ int main() {
     ocsd_err_t ret = ocsd_dt_create_decoder(dcdtree_handle, decoderName, OCSD_CREATE_FLG_FULL_DECODER, (void *)&config, &CSID);
     if (ret != OCSD_OK)
         return ret;
+    cout << "CSID = " << (int)CSID << endl;
 
     FILE* fp = fopen("simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin", "rb");
     uint32_t program_image_size = 0;
