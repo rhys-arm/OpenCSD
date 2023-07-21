@@ -139,6 +139,7 @@ int main() {
         return -1;
     }
     std::streamsize size = file.tellg();
+    cout << "size = " << size << endl;
     file.seekg(0, std::ios::beg);
     std::vector<char> buffer(size);
     if (file.read(buffer.data(), size)) {
@@ -153,6 +154,7 @@ int main() {
         return -1;
     }
 
+    cout << "Number of bytes processed = " << nUsedThisTime << endl;
 
 
     DecodeTree::DestroyDecodeTree(pTree);

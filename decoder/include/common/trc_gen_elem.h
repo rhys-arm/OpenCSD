@@ -89,6 +89,8 @@ public:
 
     virtual void toString(std::string &str) const;
 
+    static std::string staticToString(const ocsd_generic_trace_elem* elem);
+
 // get elements API
 
     OcsdTraceElement &operator =(const ocsd_generic_trace_elem* p_elem);
@@ -100,8 +102,8 @@ public:
 
     void copyPersistentData(const OcsdTraceElement &src);
 
+    static void printSWInfoPkt(const ocsd_generic_trace_elem* elem, std::ostringstream &oss);
 private:
-    void printSWInfoPkt(std::ostringstream &oss) const;
     void clearPerPktData(); //!< clear flags that indicate validity / have values on a per packet basis
 
 };
