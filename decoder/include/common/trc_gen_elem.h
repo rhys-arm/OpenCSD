@@ -46,6 +46,10 @@
  * @brief Generic trace element class
  * 
  */
+
+std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* elem);
+void ocsd_generic_trace_elem_printSWInfoPkt(const ocsd_generic_trace_elem* elem, std::ostringstream &oss);
+
 class OcsdTraceElement : public trcPrintableElem, public ocsd_generic_trace_elem
 {
 public:
@@ -89,8 +93,6 @@ public:
 
     virtual void toString(std::string &str) const;
 
-    static std::string staticToString(const ocsd_generic_trace_elem* elem);
-
 // get elements API
 
     OcsdTraceElement &operator =(const ocsd_generic_trace_elem* p_elem);
@@ -101,8 +103,6 @@ public:
     const ocsd_pe_context &getContext() const {  return context; };
 
     void copyPersistentData(const OcsdTraceElement &src);
-
-    static void printSWInfoPkt(const ocsd_generic_trace_elem* elem, std::ostringstream &oss);
 private:
     void clearPerPktData(); //!< clear flags that indicate validity / have values on a per packet basis
 
