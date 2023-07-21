@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.math.BigInteger;
+
 public class runme {
 
   public static final long NO_FORMATTER_FLAGS = 0;
@@ -13,13 +18,13 @@ public class runme {
     }
   }
 
-  public static void main(String argv[]) {
+  public static void main(String argv[]) throws IOException {
     System.out.println("hello");
 
     //DecodeTree *pTree = DecodeTree::CreateDecodeTree(OCSD_TRC_SRC_SINGLE, NO_FORMATTER_FLAGS);
     //ocsd_dcd_tree_src_t.OCSD_TRC_SRC_SINGLE
 
-    DecodeTree dt = DecodeTree.CreateDecodeTree(ocsd_dcd_tree_src_t.OCSD_TRC_SRC_SINGLE, NO_FORMATTER_FLAGS);
+    DecodeTree tree = DecodeTree.CreateDecodeTree(ocsd_dcd_tree_src_t.OCSD_TRC_SRC_SINGLE, NO_FORMATTER_FLAGS);
 
     //jopencsd.ocsd_etmv4_cfg cfg = new jopencsd.ocsd_etmv4_cfg();
     ocsd_etmv4_cfg cfg = new ocsd_etmv4_cfg();
@@ -51,23 +56,103 @@ public class runme {
     cfg.setCore_prof(ocsd_core_profile_t.profile_CortexA);
     System.out.println(cfg.getCore_prof());
 
-    
+    EtmV4Config configObj = new EtmV4Config(cfg);
+    String decoderName = jopencsdConstants.OCSD_BUILTIN_DCD_ETMV4I;
+    int decoderCreateFlags = jopencsdConstants.OCSD_CREATE_FLG_FULL_DECODER;
 
-    // EtmV4Config configObj(&config);     // initialise decoder config class 
-    // std::string decoderName(OCSD_BUILTIN_DCD_ETMV4I);  // use built in ETMv4 instruction decoder.
-    // int decoderCreateFlags = OCSD_CREATE_FLG_FULL_DECODER; // decoder type to create - OCSD_CREATE_FLG_PACKET_PROC for packet processor only
-    // ocsd_err_t err = pTree->createDecoder(decoderName, decoderCreateFlags, &configObj);
+    ocsd_err_t err = tree.createDecoder(decoderName, decoderCreateFlags, configObj);
 
-    // ocsdMsgLogger logger;
-    // logger.setLogOpts(ocsdMsgLogger::OUT_STDOUT);
-    // logger.LogMsg("Testing stdout");
+    ocsdMsgLogger logger = new ocsdMsgLogger();
+    int OUT_STDOUT = 4;
+    logger.setLogOpts(OUT_STDOUT);
+    logger.LogMsg("Testing stdout\n");
 
-    // ocsdDefaultErrorLogger err_log;
-    // err_log.initErrorLogger(OCSD_ERR_SEV_INFO);
-    // err_log.setOutputLogger(&logger);
-    // pTree->setAlternateErrorLogger(&err_log);
+    ocsdDefaultErrorLogger err_log = new ocsdDefaultErrorLogger();
+    err_log.initErrorLogger(ocsd_err_severity_t.OCSD_ERR_SEV_INFO);
+    err_log.setOutputLogger(logger);
+    DecodeTree.setAlternateErrorLogger(err_log);
 
-    // ItemPrinter *pPrinter;
-    // pTree->addPacketPrinter(0, false, &pPrinter);
+    ocsd_err_t ret = tree.createMemAccMapper();
+    if (ret != ocsd_err_t.OCSD_OK) {
+        throw new RuntimeException();
+    }
+
+    File file = new File("../../../my_app/simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin");
+    byte[] fileContent = Files.readAllBytes(file.toPath());
+
+    ret = tree.addBufferMemAcc(BigInteger.valueOf(0x80000000L), ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, fileContent, fileContent.length);
+    if (ret != ocsd_err_t.OCSD_OK) {
+        throw new RuntimeException();
+    }
+
+    DecoderOutputProcessor decoderOutputProcessor = new DecoderOutputProcessor();
+    tree.setGenTraceElemOutI(decoderOutputProcessor);
+
+    ocsd_datapath_resp_t dataPathResp = ocsd_datapath_resp_t.OCSD_RESP_CONT;
+    int trace_index = 0;
+    int nUsedThisTime = 0;
+
+
+    DecodeTree.DestroyDecodeTree(tree);
+
+    // string filepath = "simple_juno_trace/etm_dump/ETM_0_6_0.bin";
+    // std::ifstream file(filepath, std::ios::binary | std::ios::ate);
+    // if (!file) {
+    //     cerr << "Could not open file: " << filepath << endl;
+    //     return -1;
+    // }
+    // std::streamsize size = file.tellg();
+    // file.seekg(0, std::ios::beg);
+    // std::vector<char> buffer(size);
+    // if (file.read(buffer.data(), size)) {
+    //     dataPathResp = pTree->TraceDataIn(
+    //                                 OCSD_OP_DATA,
+    //                                 trace_index,
+    //                                 size,
+    //                                 (uint8_t *) buffer.data(),
+    //                                 &nUsedThisTime);
+    // } else {
+    //     cerr << "Failed to read file" << endl;
+    //     return -1;
+    // }
+
+
+    System.out.println("done");
   }
+
+  private static class DecoderOutputProcessor extends ITrcGenElemIn {
+
+    public ocsd_datapath_resp_t TraceElemIn(long index_sop, short trc_chan_id, OcsdTraceElement elem) {
+      System.out.println("TODO");
+      return ocsd_datapath_resp_t.OCSD_RESP_CONT;
+    }
+    
+  }
+
+  // class DecoderOutputProcessor : public ITrcGenElemIn
+  // {
+  // public:
+  //     DecoderOutputProcessor() {};
+  //     virtual ~DecoderOutputProcessor() {};
+  
+  //     virtual ocsd_datapath_resp_t TraceElemIn(const ocsd_trc_index_t index_sop,
+  //         const uint8_t trc_chan_id,
+  //         const OcsdTraceElement &elem)
+  //     {
+  //         // must fully process or make a copy of data in here.
+  //         // element reference only valid for scope of call.
+  
+  //         // for the example program we will stringise and print -
+  //         // but this is a client program implmentation dependent.
+  //         std::string elemStr;
+  //         std::ostringstream oss;
+  //         oss << "Idx:" << index_sop << "; ID:" << std::hex << (uint32_t)trc_chan_id << "; ";
+  //         elem.toString(elemStr);
+  //         oss << elemStr << std::endl;
+  //         cout << oss.str() << endl;
+  //         return OCSD_RESP_CONT;
+  //     }
+  // };
+
+
 }
