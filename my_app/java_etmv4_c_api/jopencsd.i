@@ -1,4 +1,4 @@
-%module jopencsd
+%module(directors="1") jopencsd
 %{
 /*#include "ocsd_if_types.h"
 #include "trc_pkt_types.h"*/
@@ -33,6 +33,8 @@ ocsd_datapath_resp_t my_decoder_output_processor(const void *p_context,
     printf("hello2: index_sop = %u\n", index_sop);
     return OCSD_RESP_CONT;
 }
+
+#include "Callback.h"
 
 %}
 
@@ -75,4 +77,7 @@ ocsd_datapath_resp_t my_decoder_output_processor(const void *p_context,
 %pointer_cast(const ocsd_etmv4_cfg *, const void *, ocsd_etmv4_cfg_to_void);
 %pointer_functions(unsigned char, unsigned_char_ptr);
 %pointer_functions(uint32_t, uint32_t_ptr);
+
+%feature("director") Callback;
+%include "Callback.h"
 

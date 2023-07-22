@@ -95,7 +95,38 @@ public class runme {
     jopencsd.ocsd_destroy_dcd_tree(handle);
 
     System.out.println("done");
+
+
+        Caller              caller = new Caller();
+    Callback            callback = new Callback();
+    
+    caller.setCallback(callback);
+    caller.call();
+    caller.delCallback();
+
+    callback = new JavaCallback();
+
+    System.out.println();
+    System.out.println("Adding and calling a Java callback");
+    System.out.println("------------------------------------");
+
+    caller.setCallback(callback);
+    caller.call();
+    caller.delCallback();
   }
 
 
+}
+
+class JavaCallback extends Callback
+{
+  public JavaCallback()
+  {
+    super();
+  }
+
+  public void run()
+  {
+    System.out.println("JavaCallback.run()");
+  }
 }
