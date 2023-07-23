@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 public class runme {
 
-  public static final long NO_FORMATTER_FLAGS = 0;
+  public static final long NO_FORMATTER_FLAGS = 0L;
 
   static {
     try {
@@ -24,6 +24,20 @@ public class runme {
     SWIGTYPE_p_void handle = jopencsd.ocsd_create_dcd_tree(ocsd_dcd_tree_src_t.OCSD_TRC_SRC_SINGLE, NO_FORMATTER_FLAGS);
 
     ocsd_etmv4_cfg cfg = new ocsd_etmv4_cfg();
+
+    cfg.setReg_idr0(0);
+    cfg.setReg_idr1(0);
+    cfg.setReg_idr2(0);
+    cfg.setReg_idr8(0);
+    cfg.setReg_idr9(0);
+    cfg.setReg_idr10(0);
+    cfg.setReg_idr11(0);
+    cfg.setReg_idr12(0);
+    cfg.setReg_idr13(0);
+    cfg.setReg_configr(0);
+    cfg.setReg_traceidr(0);
+
+
 
     cfg.setReg_idr0(0x28000EA1L);
     System.out.println("0x" + Long.toHexString(cfg.getReg_idr0()).toUpperCase());
@@ -64,69 +78,78 @@ public class runme {
 
     System.out.println("CSID = " + jopencsd.unsigned_char_ptr_value(CSID));
 
-    File file = new File("../simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin");
-    byte[] fileContent = Files.readAllBytes(file.toPath());
+      File memFile = new File("../simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin");
+      byte[] memFileContent = Files.readAllBytes(memFile.toPath());
+      System.out.println("1) memFileContent");
+      for (int i = 0; i < memFileContent.length; i++) {
+        System.out.print(memFileContent[i] + ", ");
+      }
+      System.out.println();
 
-    //ocsd_err_t ocsd_dt_add_buffer_mem_acc(SWIGTYPE_p_void handle, java.math.BigInteger address, ocsd_mem_space_acc_t mem_space, SWIGTYPE_p_unsigned_char p_mem_buffer, long mem_length) {
-    // (BigInteger.valueOf(0x80000000L), ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, fileContent, fileContent.length);
-    ret = jopencsd.ocsd_dt_add_buffer_mem_acc(handle, BigInteger.valueOf(0x80000000L), ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, fileContent, fileContent.length);
-    if (ret != ocsd_err_t.OCSD_OK) {
-      throw new RuntimeException();
-    }
+      //ocsd_err_t ocsd_dt_add_buffer_mem_acc(SWIGTYPE_p_void handle, java.math.BigInteger address, ocsd_mem_space_acc_t mem_space, SWIGTYPE_p_unsigned_char p_mem_buffer, long mem_length) {
+      // (BigInteger.valueOf(0x80000000L), ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, fileContent, fileContent.length);
+      ret = jopencsd.ocsd_dt_add_buffer_mem_acc(handle, BigInteger.valueOf(0x80000000L), ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, memFileContent, memFileContent.length);
+      if (ret != ocsd_err_t.OCSD_OK) {
+        throw new RuntimeException();
+      }
 
     //ret = ocsd_dt_set_gen_elem_outfn(SWIGTYPE_p_void handle, SWIGTYPE_p_f_p_q_const__void_q_const__unsigned_int_q_const__unsigned_char_p_q_const__ocsd_generic_trace_elem___ocsd_datapath_resp_t pFn, SWIGTYPE_p_void p_context);
     SWIGTYPE_p_void nothing = null;
-    ret = jopencsd.ocsd_dt_set_gen_elem_outfn(handle, jopencsd.HELLO, nothing);
+    Callback callback = new JavaCallback();
+    //ret = jopencsd.ocsd_dt_set_gen_elem_outfn(handle, jopencsd.HELLO, nothing);
+    ret = jopencsd.ocsd_dt_set_gen_elem_outfn_wrapper(handle, callback, nothing);
     if (ret != ocsd_err_t.OCSD_OK) {
       throw new RuntimeException();
     }
 
-    File etmFile = new File("../simple_juno_trace/etm_dump/ETM_0_6_0.bin");
-    byte[] etmFileContent = Files.readAllBytes(etmFile.toPath());
-    ocsd_datapath_resp_t dataPathResp = ocsd_datapath_resp_t.OCSD_RESP_CONT;
-    long trace_index = 0;
-    SWIGTYPE_p_unsigned_int nUsedThisTime = jopencsd.new_uint32_t_ptr();
-    System.out.println("etmFileContent.length = " + etmFileContent.length);
-    dataPathResp = jopencsd.ocsd_dt_process_data(handle, ocsd_datapath_op_t.OCSD_OP_DATA, trace_index, etmFileContent.length, etmFileContent, nUsedThisTime);
+      File etmFile = new File("../simple_juno_trace/etm_dump/ETM_0_6_0.bin");
+      byte[] etmFileContent = Files.readAllBytes(etmFile.toPath());
+      ocsd_datapath_resp_t dataPathResp = ocsd_datapath_resp_t.OCSD_RESP_CONT;
+      long trace_index = 0;
+      SWIGTYPE_p_unsigned_int nUsedThisTime = jopencsd.new_uint32_t_ptr();
+      System.out.println("etmFileContent.length = " + etmFileContent.length);
+      dataPathResp = jopencsd.ocsd_dt_process_data(handle, ocsd_datapath_op_t.OCSD_OP_DATA, trace_index, etmFileContent.length, etmFileContent, nUsedThisTime);
 
-    System.out.println("dataPathResp = " + dataPathResp);
-    System.out.println("Number of bytes processed = " + jopencsd.uint32_t_ptr_value(nUsedThisTime));
+      System.out.println("dataPathResp = " + dataPathResp);
+      System.out.println("Number of bytes processed = " + jopencsd.uint32_t_ptr_value(nUsedThisTime));
 
-    jopencsd.ocsd_destroy_dcd_tree(handle);
+      jopencsd.ocsd_destroy_dcd_tree(handle);
 
-    System.out.println("done");
+      System.out.println("done");
 
+      System.out.println("2) memFileContent");
+      for (int i = 0; i < memFileContent.length; i++) {
+        System.out.print(memFileContent[i] + ", ");
+      }
+      System.out.println();
 
-        Caller              caller = new Caller();
-    Callback            callback = new Callback();
-    
-    caller.setCallback(callback);
-    caller.call();
-    caller.delCallback();
-
-    callback = new JavaCallback();
-
-    System.out.println();
-    System.out.println("Adding and calling a Java callback");
-    System.out.println("------------------------------------");
-
-    caller.setCallback(callback);
-    caller.call();
-    caller.delCallback();
   }
 
 
 }
 
-class JavaCallback extends Callback
-{
-  public JavaCallback()
-  {
+class JavaCallback extends Callback {
+
+  public JavaCallback() {
     super();
   }
 
-  public void run()
-  {
-    System.out.println("JavaCallback.run()");
+  public ocsd_datapath_resp_t my_decoder_output_processor(SWIGTYPE_p_void p_context, long index_sop, short trc_chan_id,
+      ocsd_generic_trace_elem elem) {
+    // System.out.println("JavaCallback::my_decoder_output_processor");
+    // System.out.println("index_sop = " + index_sop);
+    // System.out.println("trc_chan_id = " + trc_chan_id);
+    // System.out.println("elem = " + elem);
+    // System.out.println("elem.getElem_type() = " + elem.getElem_type());
+    // //printElem(elem);
+    // System.out.println();
+    // return ocsd_datapath_resp_t.OCSD_RESP_CONT;
+
+
+    String str = "Idx:" + index_sop + "; ID:" + trc_chan_id + "; ";
+    str += jopencsd.ocsd_generic_trace_elem_to_string(elem);
+    System.out.println(str);
+    return ocsd_datapath_resp_t.OCSD_RESP_CONT;
   }
+
 }

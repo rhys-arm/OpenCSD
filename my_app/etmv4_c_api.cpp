@@ -51,7 +51,7 @@ ocsd_datapath_resp_t my_decoder_output_processor(const void *p_context,
                                                  const ocsd_generic_trace_elem *elem) {
     std::ostringstream oss;
     oss << "Idx:" << index_sop << "; ID:" << std::hex << (uint32_t)trc_chan_id << "; ";
-    std::string elemStr = OcsdTraceElement::staticToString(elem);
+    std::string elemStr = ocsd_generic_trace_elem_to_string(elem);
     oss << elemStr << std::endl;
     cout << oss.str() << endl;
     return OCSD_RESP_CONT;

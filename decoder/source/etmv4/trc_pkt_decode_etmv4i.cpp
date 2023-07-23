@@ -287,12 +287,16 @@ void TrcPktDecodeEtmV4I::onFirstInitOK()
 }
 
 // Changes a packet into stack of trace elements - these will be resolved and output later
+
+using namespace std;
+#include <iostream>
 ocsd_err_t TrcPktDecodeEtmV4I::decodePacket()
 {
     ocsd_err_t err = OCSD_OK;
     bool bAllocErr = false;
     bool is_addr = false;
 
+    cout << "m_curr_packet_in->getType() = " << m_curr_packet_in->getType() << endl;
     switch(m_curr_packet_in->getType())
     {
     case ETM4_PKT_I_ASYNC: // nothing to do with this packet.
@@ -710,8 +714,11 @@ ocsd_datapath_resp_t TrcPktDecodeEtmV4I::resolveElements()
    according to the number of P0 elements that need committing.
    Build a stack of output elements in the process.
  */
+using namespace std;
+#include <iostream>
 ocsd_err_t TrcPktDecodeEtmV4I::commitElements()
 {
+    cout << "TrcPktDecodeEtmV4I::commitElements()" << endl;
     ocsd_err_t err = OCSD_OK;
     bool bPopElem = true;       // do we remove the element from the stack (multi atom elements may need to stay!)
     int num_commit_req = m_elem_res.P0_commit;

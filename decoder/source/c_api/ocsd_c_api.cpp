@@ -138,7 +138,8 @@ OCSD_C_API void ocsd_destroy_dcd_tree(const dcd_tree_handle_t handle)
 }
 
 /*** Decode tree process data */
-
+using namespace std;
+#include <iostream>
 OCSD_C_API ocsd_datapath_resp_t ocsd_dt_process_data(const dcd_tree_handle_t handle,
                                             const ocsd_datapath_op_t op,
                                             const ocsd_trc_index_t index,
@@ -146,9 +147,17 @@ OCSD_C_API ocsd_datapath_resp_t ocsd_dt_process_data(const dcd_tree_handle_t han
                                             const uint8_t *pDataBlock,
                                             uint32_t *numBytesProcessed)
 {
+    cout << "op = " << op << endl;
+    cout << "index = " << index << endl;
+    cout << "dataBlockSize = " << dataBlockSize << endl;
+    for (uint32_t i = 0; i < dataBlockSize; i++) {
+        cout << "0x" << hex << static_cast<int>( *(pDataBlock + i)) << ", ";
+    }
+    cout << endl;
     ocsd_datapath_resp_t resp =  OCSD_RESP_FATAL_NOT_INIT;
     if(handle != C_API_INVALID_TREE_HANDLE)
         resp = ((DecodeTree *)handle)->TraceDataIn(op,index,dataBlockSize,pDataBlock,numBytesProcessed);
+    cout << dec << "numBytesProcessed = " << *numBytesProcessed << endl;
     return resp;
 }
 
@@ -402,6 +411,13 @@ OCSD_C_API ocsd_err_t ocsd_dt_add_binfile_region_mem_acc(const dcd_tree_handle_t
 
 OCSD_C_API ocsd_err_t ocsd_dt_add_buffer_mem_acc(const dcd_tree_handle_t handle, const ocsd_vaddr_t address, const ocsd_mem_space_acc_t mem_space, const uint8_t *p_mem_buffer, const uint32_t mem_length)
 {
+    cout << "address = 0x" << hex << address << endl;
+    cout << "mem_space = 0x" << hex << mem_space << endl;
+    cout << "mem_length = " << dec << mem_length << endl;
+    for (uint32_t i = 0; i < mem_length; i++) {
+        cout << "0x" << hex << static_cast<int>( *(p_mem_buffer + i)) << ", ";
+    }
+    cout << dec << endl;
     ocsd_err_t err = OCSD_OK;
     DecodeTree *pDT;
     err = ocsd_check_and_add_mem_acc_mapper(handle,&pDT);

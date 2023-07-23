@@ -35,18 +35,39 @@
 
 #include "mem_acc/trc_mem_acc_bufptr.h"
 
+using namespace std;
+#include <iostream>
 TrcMemAccBufPtr::TrcMemAccBufPtr(const ocsd_vaddr_t s_address, const uint8_t *p_buffer, const uint32_t size) : 
     TrcMemAccessorBase(MEMACC_BUFPTR, s_address, s_address+size-1),
     m_p_buffer(p_buffer)
 {
+    cout << "       ****    TrcMemAccBufPtr::TrcMemAccBufPtr" << endl;
+    for (uint32_t i = 0; i < size; i++) {
+        cout << "0x" << hex << static_cast<int>( *(m_p_buffer + i)) << ", ";
+    }
+    cout << endl;
 }
 
 const uint32_t TrcMemAccBufPtr::readBytes(const ocsd_vaddr_t address, const ocsd_mem_space_acc_t mem_space, const uint8_t trcID, const uint32_t reqBytes, uint8_t *byteBuffer)
 {
+    cout << "       **    TrcMemAccBufPtr::readBytes" << endl;
+    for (uint32_t i = 0; i < 40; i++) {
+        cout << "0x" << hex << static_cast<int>( *(m_p_buffer + i)) << ", ";
+    }
+    cout << endl;
+    cout << endl;
+    cout << "address = 0x" << hex << address << endl;
+    cout << "reqBytes = " << dec << reqBytes << endl;
     // mapper wlll filter memory spaces.
     uint32_t bytesRead = bytesInRange(address,reqBytes); // check bytes available
+    cout << "bytesRead = " << dec << bytesRead << endl;
+    cout << "m_startAddress = 0x" << hex << m_startAddress << dec << endl;
     if(bytesRead)
         memcpy(byteBuffer,m_p_buffer+address-m_startAddress,bytesRead);
+    for (uint32_t i = 0; i < bytesRead; i++) {
+        cout << "0x" << hex << static_cast<int>( *((m_p_buffer+address-m_startAddress) + i)) << ", ";
+    }
+    cout << endl;
     return bytesRead;
 }
 

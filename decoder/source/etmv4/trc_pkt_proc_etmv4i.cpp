@@ -80,6 +80,8 @@ ocsd_err_t TrcPktProcEtmV4I::onProtocolConfig()
     return OCSD_OK;
 }
 
+using namespace std;
+#include <iostream>
 ocsd_datapath_resp_t TrcPktProcEtmV4I::processData(  const ocsd_trc_index_t index,
                                     const uint32_t dataBlockSize,
                                     const uint8_t *pDataBlock,
@@ -103,6 +105,7 @@ ocsd_datapath_resp_t TrcPktProcEtmV4I::processData(  const ocsd_trc_index_t inde
                     OCSD_DATA_RESP_IS_CONT(resp)
                 )
             {
+                cout << "m_process_state = " << m_process_state << endl;
                 switch (m_process_state)
                 {
                 case PROC_HDR:
@@ -126,6 +129,7 @@ ocsd_datapath_resp_t TrcPktProcEtmV4I::processData(  const ocsd_trc_index_t inde
                     while (!m_trcIn.empty() && (m_process_state == PROC_DATA))
                     {
                         nextByte = m_trcIn.peekNextByte();
+                        cout << "nextByte = 0x" << hex << static_cast<int>(nextByte) << dec << endl;
                         // fprintf(stderr, "0x%x\n", nextByte);
                         m_trcIn.copyByteToPkt();  // move next byte into the packet
                         (this->*m_pIPktFn)(nextByte);
@@ -1210,6 +1214,7 @@ void TrcPktProcEtmV4I::iAtom(const uint8_t lastByte)
     uint32_t pattern;
 
     // atom packets are single byte, no payload.
+    cout << "m_curr_packet.type = " << m_curr_packet.type << endl;
     switch(m_curr_packet.type)
     {
     case ETM4_PKT_I_ATOM_F1:

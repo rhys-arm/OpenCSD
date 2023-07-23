@@ -75,8 +75,11 @@ void TrcMemAccMapper::setErrorLog(ITraceErrorLog *err_log_i)
 }
 
 // memory access interface
+using namespace std;
+#include <iostream>
 ocsd_err_t TrcMemAccMapper::ReadTargetMemory(const ocsd_vaddr_t address, const uint8_t cs_trace_id, const ocsd_mem_space_acc_t mem_space, uint32_t *num_bytes, uint8_t *p_buffer)
 {
+    cout << "TrcMemAccMapper::ReadTargetMemory" << endl;
     bool bReadFromCurr = true;
     uint32_t readBytes = 0;
     ocsd_err_t err = OCSD_OK;
@@ -95,7 +98,7 @@ ocsd_err_t TrcMemAccMapper::ReadTargetMemory(const ocsd_vaddr_t address, const u
     if (bReadFromCurr)
     {
         // use cache if enabled and the amount fits into a cache page
-        if (m_cache.enabled_for_size(*num_bytes))
+        if (m_cache.enabled_for_size(*num_bytes) && false)
         {
             // read from cache - or load a new cache page and read....
             readBytes = *num_bytes;
@@ -116,6 +119,10 @@ ocsd_err_t TrcMemAccMapper::ReadTargetMemory(const ocsd_vaddr_t address, const u
     }
 
     *num_bytes = readBytes;  
+    for (uint32_t i = 0; i < readBytes; i++) {
+        cout << "0x" << hex << static_cast<int>( *(p_buffer + i)) << ", ";
+    }
+    cout << endl;
     return err;
 }
 
