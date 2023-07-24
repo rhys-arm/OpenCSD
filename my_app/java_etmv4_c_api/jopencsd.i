@@ -20,6 +20,16 @@ static ocsd_datapath_resp_t my_decoder_output_processor_helper(const void *p_con
                                                  elem);
 }
 
+
+#include "Callback2.h"
+static Callback2 *handler_ptr2 = NULL;
+
+uint32_t my_mem_acc_function_helper(const void *p_context, const ocsd_vaddr_t address,
+        const ocsd_mem_space_acc_t mem_space, const uint8_t trcID, const uint32_t reqBytes, uint8_t *byteBuffer)
+{
+    return handler_ptr2->my_mem_acc_function(p_context, address, mem_space, trcID, reqBytes, byteBuffer);
+}
+
 %}
 
 %include "std_string.i"
@@ -35,16 +45,27 @@ OCSD_C_API ocsd_err_t ocsd_dt_set_gen_elem_outfn_wrapper(const dcd_tree_handle_t
 %}
 
 %inline %{
+OCSD_C_API ocsd_err_t ocsd_dt_add_callback_trcid_mem_acc_wrapper(const dcd_tree_handle_t handle, const ocsd_vaddr_t st_address, const ocsd_vaddr_t en_address,
+                          const ocsd_mem_space_acc_t mem_space, Callback2 *handler2, const void *p_context) {
+  handler_ptr2 = handler2;
+  ocsd_err_t result = ocsd_dt_add_callback_trcid_mem_acc(handle, st_address, en_address, mem_space, &my_mem_acc_function_helper, p_context);
+  handler2 = NULL;
+  return result;
+}
+%}
+
+
+
+
+
+
+
+%inline %{
 std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* elem);
 %}
 
 %include cpointer.i
 %include various.i
-
-%typemap(in)        (const uint8_t *p_mem_buffer, const uint32_t mem_length) {
-  $1 = JCALL1(GetDirectBufferAddress, jenv, $input); 
-  $2 = (int)JCALL1(GetDirectBufferCapacity, jenv, $input); 
-}
 
 %typemap(in)        (const uint32_t dataBlockSize, const uint8_t *pDataBlock) {
   $1 = (int)JCALL1(GetDirectBufferCapacity, jenv, $input); 
@@ -52,11 +73,11 @@ std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* ele
 }
 
 /* These 3 typemaps tell SWIG what JNI and Java types to use */ 
-%typemap(jni)       (const uint8_t *p_mem_buffer, const uint32_t mem_length), (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "jobject" 
-%typemap(jtype)     (const uint8_t *p_mem_buffer, const uint32_t mem_length), (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "java.nio.ByteBuffer" 
-%typemap(jstype)    (const uint8_t *p_mem_buffer, const uint32_t mem_length), (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "java.nio.ByteBuffer" 
-%typemap(javain)    (const uint8_t *p_mem_buffer, const uint32_t mem_length), (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "$javainput" 
-%typemap(javaout)   (const uint8_t *p_mem_buffer, const uint32_t mem_length), (const uint32_t dataBlockSize, const uint8_t *pDataBlock) { 
+%typemap(jni)       (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "jobject" 
+%typemap(jtype)     (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "java.nio.ByteBuffer" 
+%typemap(jstype)    (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "java.nio.ByteBuffer" 
+%typemap(javain)    (const uint32_t dataBlockSize, const uint8_t *pDataBlock) "$javainput" 
+%typemap(javaout)   (const uint32_t dataBlockSize, const uint8_t *pDataBlock) { 
     return $jnicall; 
 }
 
@@ -76,3 +97,8 @@ std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* ele
 
 %feature("director") Callback;
 %include "Callback.h"
+%feature("director") Callback2;
+%include "Callback2.h"
+
+%include "carrays.i"
+%array_functions(uint8_t, uint8_t_Array);
