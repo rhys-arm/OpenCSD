@@ -45,6 +45,44 @@ const uint32_t NO_FORMATTER_FLAGS = 0;
     //                                             const uint8_t trc_chan_id, 
     //                                             const ocsd_generic_trace_elem *elem); 
 
+uint32_t my_mem_acc_function(const void *p_context, const ocsd_vaddr_t address,
+        const ocsd_mem_space_acc_t mem_space, const uint8_t trcID, const uint32_t reqBytes, uint8_t *byteBuffer)
+{
+    cout << "my_mem_acc_function" << endl;
+    cout << "address = 0x" << hex << address << dec << endl;
+    cout << "mem_space = " << mem_space << endl;
+    cout << "trcID = 0x" << hex << static_cast<int>(trcID) << dec << endl;
+    cout << "reqBytes = " << reqBytes << endl;
+
+    FILE* fp = fopen("simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin", "rb");
+    uint32_t program_image_size = 0;
+    size_t bytes_read = 0;
+    if (!fp)
+        return OCSD_ERR_FILE_ERROR;
+    fseek(fp, 0, SEEK_END);
+    program_image_size = ftell(fp);
+    uint8_t* program_image_buffer = new (std::nothrow) uint8_t[program_image_size];
+    if (!program_image_buffer) {
+        fclose(fp);
+        return OCSD_ERR_MEM;
+    }
+    rewind(fp);
+    bytes_read = fread(program_image_buffer, 1, program_image_size, fp);
+    fclose(fp);
+    if (bytes_read < (size_t)program_image_size)
+        return OCSD_ERR_FILE_ERROR;
+    
+    uint32_t numBytes = 0;
+    for (numBytes = 0; numBytes < reqBytes, numBytes < program_image_size; numBytes++) {
+        *(byteBuffer + numBytes) = *(program_image_buffer + (address - 0x80000000) + numBytes);
+    }
+
+    delete [] program_image_buffer;
+
+    cout << "return numBytes = " << numBytes << endl;
+    return numBytes;
+}
+
 ocsd_datapath_resp_t my_decoder_output_processor(const void *p_context, 
                                                  const ocsd_trc_index_t index_sop, 
                                                  const uint8_t trc_chan_id, 
@@ -92,29 +130,21 @@ int main() {
     if (ret != OCSD_OK)
         return ret;
     cout << "CSID = " << (int)CSID << endl;
-
-    FILE* fp = fopen("simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin", "rb");
-    uint32_t program_image_size = 0;
-    size_t bytes_read = 0;
-    if (!fp)
-        return OCSD_ERR_FILE_ERROR;
-    fseek(fp, 0, SEEK_END);
-    program_image_size = ftell(fp);
-    uint8_t* program_image_buffer = new (std::nothrow) uint8_t[program_image_size];
-    if (!program_image_buffer) {
-        fclose(fp);
-        return OCSD_ERR_MEM;
-    }
-    rewind(fp);
-    bytes_read = fread(program_image_buffer, 1, program_image_size, fp);
-    fclose(fp);
-    if (bytes_read < (size_t)program_image_size)
-        return OCSD_ERR_FILE_ERROR;
     
 
-    ret = ocsd_dt_add_buffer_mem_acc(dcdtree_handle, 0x80000000, OCSD_MEM_SPACE_ANY, program_image_buffer, program_image_size);
-    if (ret != OCSD_OK)
+    // ret = ocsd_dt_add_buffer_mem_acc(dcdtree_handle, 0x80000000, OCSD_MEM_SPACE_ANY, program_image_buffer, program_image_size);
+    // if (ret != OCSD_OK)
+    //     return ret;
+    
+    // OCSD_C_API ocsd_err_t ocsd_dt_add_callback_trcid_mem_acc(const dcd_tree_handle_t handle, const ocsd_vaddr_t st_address,
+    // const ocsd_vaddr_t en_address, const ocsd_mem_space_acc_t mem_space, Fn_MemAccID_CB p_cb_func, const void *p_context);
+    const ocsd_vaddr_t st_address = 0x80000000;
+    const ocsd_vaddr_t en_address = 0x80000023;
+    ret = ocsd_dt_add_callback_trcid_mem_acc(dcdtree_handle, st_address, en_address, OCSD_MEM_SPACE_ANY, my_mem_acc_function, p_context);
+    if (ret != OCSD_OK) {
+        cerr << "ret = " << ret << endl;
         return ret;
+    }
     
     ret = ocsd_dt_set_gen_elem_outfn(dcdtree_handle, my_decoder_output_processor, 0);
     if (ret != OCSD_OK)

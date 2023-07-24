@@ -65,18 +65,20 @@ public class runme {
 
     System.out.println("CSID = " + jopencsd.unsigned_char_ptr_value(CSID));
 
-      File memFile = new File("../simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin");
-      byte[] memFileContent = Files.readAllBytes(memFile.toPath());
-
-      ByteBuffer memFileContentBB = ByteBuffer.allocateDirect(memFileContent.length);
-      memFileContentBB.put(memFileContent);
-      memFileContentBB.flip();
-      ret = jopencsd.ocsd_dt_add_buffer_mem_acc(handle, BigInteger.valueOf(0x80000000L), ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, memFileContentBB);
+      Callback2 callback2 = new JavaCallback2();
+      SWIGTYPE_p_void nothing = null;
+      ret = jopencsd.ocsd_dt_add_callback_trcid_mem_acc_wrapper(handle, BigInteger.valueOf(0x80000000L), BigInteger.valueOf(0x80000023L),
+                         ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, callback2, nothing);
+      if (ret != ocsd_err_t.OCSD_OK) {
+        throw new RuntimeException();
+      }
+    
+      // ret = jopencsd.ocsd_dt_add_callback_trcid_mem_acc(handle, BigInteger.valueOf(0x80000000L), BigInteger.valueOf(0x80000023L),
+      //                    ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, my_mem_acc_function, nothing);
       if (ret != ocsd_err_t.OCSD_OK) {
         throw new RuntimeException();
       }
 
-    SWIGTYPE_p_void nothing = null;
     Callback callback = new JavaCallback();
     ret = jopencsd.ocsd_dt_set_gen_elem_outfn_wrapper(handle, callback, nothing);
     if (ret != ocsd_err_t.OCSD_OK) {
@@ -113,6 +115,36 @@ class JavaCallback extends Callback {
     str += jopencsd.ocsd_generic_trace_elem_to_string(elem);
     System.out.println(str);
     return ocsd_datapath_resp_t.OCSD_RESP_CONT;
+  }
+
+}
+
+class JavaCallback2 extends Callback2 {
+
+  public long my_mem_acc_function(SWIGTYPE_p_void p_context, java.math.BigInteger address, ocsd_mem_space_acc_t mem_space,
+                  short trcID, long reqBytes, SWIGTYPE_p_unsigned_char byteBuffer) {
+      System.out.println("my_mem_acc_function");
+
+      File memFile = new File("../simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin");
+      byte[] memFileContent;
+      try {
+        memFileContent = Files.readAllBytes(memFile.toPath());
+      } catch (IOException e) {
+        e.printStackTrace();
+        return 0;
+      }
+
+    int memFilePos = java.lang.Math.toIntExact(address.longValueExact() - 0x80000000L);
+    System.out.println("memFilePos = " + memFilePos);
+
+    int numBytes = 0;
+    for (numBytes = 0; numBytes < reqBytes && numBytes < memFileContent.length; numBytes++) {
+      System.out.println("writing 0x" + Long.toHexString(memFileContent[memFilePos + numBytes] & 0xFFL));
+      jopencsd.uint8_t_Array_setitem(byteBuffer, numBytes, (short)(memFileContent[memFilePos + numBytes] & 0xFF));
+    }
+    
+    System.out.println("returning numBytes = " + numBytes);
+    return numBytes;
   }
 
 }
