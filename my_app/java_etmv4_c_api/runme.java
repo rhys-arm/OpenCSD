@@ -1,3 +1,5 @@
+import com.arm.debug.trace.decode.jopencsd.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
