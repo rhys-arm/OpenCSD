@@ -201,6 +201,23 @@ typedef enum _ocsd_datapath_resp_t {
     OCSD_RESP_FATAL_SYS_ERR,       /**< Processing Fatal Error :  internal system error. */
 } ocsd_datapath_resp_t;
 
+inline const char* ocsd_datapath_resp_t_as_string(ocsd_datapath_resp_t datapath_resp) {
+    switch (datapath_resp) {
+        case OCSD_RESP_CONT: return "OCSD_RESP_CONT";
+        case OCSD_RESP_WARN_CONT: return "OCSD_RESP_WARN_CONT";
+        case OCSD_RESP_ERR_CONT: return "OCSD_RESP_ERR_CONT";
+        case OCSD_RESP_WAIT: return "OCSD_RESP_WAIT";
+        case OCSD_RESP_WARN_WAIT: return "OCSD_RESP_WARN_WAIT";
+        case OCSD_RESP_ERR_WAIT: return "OCSD_RESP_ERR_WAIT";
+        case OCSD_RESP_FATAL_NOT_INIT: return "OCSD_RESP_FATAL_NOT_INIT";
+        case OCSD_RESP_FATAL_INVALID_OP: return "OCSD_RESP_FATAL_INVALID_OP";
+        case OCSD_RESP_FATAL_INVALID_PARAM: return "OCSD_RESP_FATAL_INVALID_PARAM";
+        case OCSD_RESP_FATAL_INVALID_DATA: return "OCSD_RESP_FATAL_INVALID_DATA";
+        case OCSD_RESP_FATAL_SYS_ERR: return "OCSD_RESP_FATAL_SYS_ERR";
+        default: return "UNEXPECTED ocsd_datapath_resp_t value";
+    }
+}
+
 /*! Macro returning true if datapath response value is FATAL. */
 #define OCSD_DATA_RESP_IS_FATAL(x) (x >= OCSD_RESP_FATAL_NOT_INIT)
 /*! Macro returning true if datapath response value indicates WARNING logged. */
