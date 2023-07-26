@@ -152,7 +152,6 @@ int main() {
 
     ocsd_datapath_resp_t dataPathResp = OCSD_RESP_CONT;
     uint32_t trace_index = 0;
-    uint32_t nUsedThisTime = 0;
 
     std::string filepath = "simple_juno_trace/etm_dump/ETM_0_6_0.bin";
     std::ifstream file(filepath, std::ios::binary | std::ios::ate);
@@ -161,22 +160,39 @@ int main() {
         return -1;
     }
     std::streamsize size = file.tellg();
-    cout << "size = " << size << endl;
+    cout << "ETM trace size = " << size << endl;
     file.seekg(0, std::ios::beg);
     std::vector<char> buffer(size);
-    if (file.read(buffer.data(), size)) {
-        dataPathResp = ocsd_dt_process_data(dcdtree_handle,
-                                    OCSD_OP_DATA,
-                                    trace_index,
-                                    size,
-                                    (uint8_t *) buffer.data(),
-                                    &nUsedThisTime);
-    } else {
+    if (!file.read(buffer.data(), size)) {
         cerr << "Failed to read file" << endl;
         return -1;
     }
 
-    cout << "Number of bytes processed = " << nUsedThisTime << endl;
+    uint8_t* etmBufPos = (uint8_t*)buffer.data();
+    const uint32_t chunkSize = 8;
+    uint32_t dataThisIteration = 0;
+    uint32_t nUsedThisTime = 0;
+    uint32_t etmDataRemaining = size;
+    while (etmDataRemaining > 0) {
+        dataThisIteration = std::min(chunkSize, etmDataRemaining);
+        cout << "\n> dataThisIteration = " << dataThisIteration << endl;
+        dataPathResp = ocsd_dt_process_data(dcdtree_handle,
+                                    OCSD_OP_DATA,
+                                    trace_index,
+                                    dataThisIteration,
+                                    etmBufPos,
+                                    &nUsedThisTime);
+
+        etmBufPos += nUsedThisTime;
+        etmDataRemaining -= nUsedThisTime;
+        cout << " -> dataPathResp = " << ocsd_datapath_resp_t_as_string(dataPathResp) << endl;
+        if (dataPathResp != OCSD_RESP_CONT) {
+            cerr << " -----> Exiting early as dataPathResp != OCSD_RESP_CONT" << endl;
+            break;
+        }
+    }
+
+    cout << "etmDataRemaining = " << etmDataRemaining << endl;
 
 
     // OCSD_C_API ocsd_datapath_resp_t ocsd_dt_process_data(const dcd_tree_handle_t handle,
