@@ -54,7 +54,7 @@ uint32_t my_mem_acc_function(const void *p_context, const ocsd_vaddr_t address,
     cout << "trcID = 0x" << hex << static_cast<int>(trcID) << dec << endl;
     cout << "reqBytes = " << reqBytes << endl;
 
-    FILE* fp = fopen("simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin", "rb");
+    FILE* fp = fopen("simple_juno_trace/updated_juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin", "rb");
     uint32_t program_image_size = 0;
     size_t bytes_read = 0;
     if (!fp)
@@ -139,7 +139,7 @@ int main() {
     // OCSD_C_API ocsd_err_t ocsd_dt_add_callback_trcid_mem_acc(const dcd_tree_handle_t handle, const ocsd_vaddr_t st_address,
     // const ocsd_vaddr_t en_address, const ocsd_mem_space_acc_t mem_space, Fn_MemAccID_CB p_cb_func, const void *p_context);
     const ocsd_vaddr_t st_address = 0x80000000;
-    const ocsd_vaddr_t en_address = 0x80000023;
+    const ocsd_vaddr_t en_address = 0x80000033;
     ret = ocsd_dt_add_callback_trcid_mem_acc(dcdtree_handle, st_address, en_address, OCSD_MEM_SPACE_ANY, my_mem_acc_function, p_context);
     if (ret != OCSD_OK) {
         cerr << "ret = " << ret << endl;
@@ -153,7 +153,7 @@ int main() {
     ocsd_datapath_resp_t dataPathResp = OCSD_RESP_CONT;
     uint32_t trace_index = 0;
 
-    std::string filepath = "simple_juno_trace/etm_dump/ETM_0_6_0.bin";
+    std::string filepath = "simple_juno_trace/updated_juno_snapshot_trace/ETM_0_6_0.bin";
     std::ifstream file(filepath, std::ios::binary | std::ios::ate);
     if (!file) {
         cerr << "Could not open file: " << filepath << endl;
