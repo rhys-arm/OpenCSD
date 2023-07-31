@@ -17,7 +17,10 @@ a64_main:
     mov x5, #5
 func1:
     mov x6, #6
-/* The debugger should set a breakpoint here */
+    cmp x0, #1
+    beq func1
     mov x7, #7
+/* The debugger should set a breakpoint here */
+    mov x8, #8
 
 .end
