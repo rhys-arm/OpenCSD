@@ -83,6 +83,7 @@ std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* ele
 
 %include "ocsd_if_types.h"
 %include "trc_pkt_types.h"
+%include "trc_pkt_types_etmv3.h"
 %include "trc_pkt_types_etmv4.h"
 
 %include "ocsd_c_api_custom.h"
@@ -92,6 +93,7 @@ std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* ele
 %include "trc_gen_elem_types.h"
 
 %pointer_cast(const ocsd_etmv4_cfg *, const void *, ocsd_etmv4_cfg_to_void);
+%pointer_cast(const ocsd_etmv3_cfg *, const void *, ocsd_etmv3_cfg_to_void);
 %pointer_functions(unsigned char, unsigned_char_ptr);
 %pointer_functions(uint32_t, uint32_t_ptr);
 
@@ -102,3 +104,19 @@ std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* ele
 
 %include "carrays.i"
 %array_functions(uint8_t, uint8_t_Array);
+
+%inline %{
+int64_t ocsd_generic_trace_elem_st_addr_as_long(const ocsd_generic_trace_elem* elem)
+{
+  return elem->st_addr;
+}
+
+bool ocsd_generic_trace_elem_is_trace_on(const ocsd_generic_trace_elem* elem)
+{return elem->elem_type == OCSD_GEN_TRC_ELEM_TRACE_ON;}
+bool ocsd_generic_trace_elem_is_range(const ocsd_generic_trace_elem* elem)
+{return elem->elem_type == OCSD_GEN_TRC_ELEM_INSTR_RANGE;}
+bool ocsd_generic_trace_elem_is_pe_context(const ocsd_generic_trace_elem* elem)
+{return elem->elem_type == OCSD_GEN_TRC_ELEM_PE_CONTEXT;}
+bool ocsd_generic_trace_elem_is_exception(const ocsd_generic_trace_elem* elem)
+{return elem->elem_type == OCSD_GEN_TRC_ELEM_EXCEPTION;}
+%}
