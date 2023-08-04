@@ -114,7 +114,7 @@ class JavaCallback extends Callback {
   public ocsd_datapath_resp_t my_decoder_output_processor(SWIGTYPE_p_void p_context, long index_sop, short trc_chan_id,
       ocsd_generic_trace_elem elem) {
     String str = "Idx:" + index_sop + "; ID:" + trc_chan_id + "; ";
-    str += jopencsd.ocsd_generic_trace_elem_to_string(elem);
+    //str += jopencsd.ocsd_generic_trace_elem_to_string(elem);
     System.out.println(str);
     return ocsd_datapath_resp_t.OCSD_RESP_CONT;
   }
