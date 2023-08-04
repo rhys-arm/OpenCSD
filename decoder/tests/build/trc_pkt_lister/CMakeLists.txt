@@ -11,7 +11,7 @@ target_include_directories(trc_pkt_lister PRIVATE
 
 target_link_libraries(trc_pkt_lister PRIVATE
     snapshot_parser
-    opencsd_static
+    opencsd
 )
 
 if(UNIX)

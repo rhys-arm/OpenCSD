@@ -10,7 +10,7 @@ target_include_directories(c_api_pkt_print_test PRIVATE
 )
 
 target_link_libraries(c_api_pkt_print_test PRIVATE
-    opencsd_static
+    opencsd
     opencsd_c_api
     echo_test_dcd
 )

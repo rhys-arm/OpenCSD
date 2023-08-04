@@ -60,16 +60,16 @@ OCSD_C_API ocsd_err_t ocsd_dt_add_callback_trcid_mem_acc_wrapper(const dcd_tree_
 
 
 
-%inline %{
-std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* elem);
-%}
+// %inline %{
+// std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* elem);
+// %}
 
 %include cpointer.i
 %include various.i
 
 %typemap(in)        (const uint32_t dataBlockSize, const uint8_t *pDataBlock) {
   $1 = (int)JCALL1(GetDirectBufferCapacity, jenv, $input); 
-  $2 = JCALL1(GetDirectBufferAddress, jenv, $input); 
+  $2 = (uint8_t*)JCALL1(GetDirectBufferAddress, jenv, $input);
 }
 
 /* These 3 typemaps tell SWIG what JNI and Java types to use */ 

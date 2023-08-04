@@ -10,7 +10,7 @@ target_include_directories(mem_buffer_eg PRIVATE
 
 target_link_libraries(mem_buffer_eg PRIVATE
     snapshot_parser
-    opencsd_static
+    opencsd
 )
 
 if(UNIX)
