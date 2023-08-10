@@ -22,12 +22,20 @@ endfunction()
 if(UNIX AND CMAKE_BUILD_TYPE STREQUAL "Release")
     set_compiler_release_optimisation_level(CMAKE_C_FLAGS_RELEASE "-O2")
     set_compiler_release_optimisation_level(CMAKE_CXX_FLAGS_RELEASE "-O2")
+elseif(UNIX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_C_FLAGS_DEBUG "-g -O2")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g -O2")
 endif()
+
+include(CMakePrintHelpers)
+cmake_print_variables(CMAKE_C_FLAGS_RELEASE)
+cmake_print_variables(CMAKE_CXX_FLAGS_RELEASE)
+cmake_print_variables(CMAKE_C_FLAGS_DEBUG)
+cmake_print_variables(CMAKE_CXX_FLAGS_DEBUG)
 
 set(OPENCSD_SRCROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 get_filename_component(OPENCSD_SRCROOT_DIR ${OPENCSD_SRCROOT_DIR} ABSOLUTE)
 
-include(CMakePrintHelpers)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

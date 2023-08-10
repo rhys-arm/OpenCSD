@@ -45,23 +45,19 @@ const uint32_t NO_FORMATTER_FLAGS = 0;
     //                                             const uint8_t trc_chan_id, 
     //                                             const ocsd_generic_trace_elem *elem); 
 
-uint32_t my_mem_acc_function(const void *p_context, const ocsd_vaddr_t address,
-        const ocsd_mem_space_acc_t mem_space, const uint8_t trcID, const uint32_t reqBytes, uint8_t *byteBuffer)
-{
-    cout << "my_mem_acc_function" << endl;
-    cout << "address = 0x" << hex << address << dec << endl;
-    cout << "mem_space = " << mem_space << endl;
-    cout << "trcID = 0x" << hex << static_cast<int>(trcID) << dec << endl;
-    cout << "reqBytes = " << reqBytes << endl;
+const ocsd_vaddr_t imageStartAddr = 0xE6310000;
+const ocsd_vaddr_t imageEndAddr = imageStartAddr + 0x429C;
 
-    FILE* fp = fopen("simple_juno_trace/juno_snapshot/mem_Cortex-A53_0_0_EXEC.bin", "rb");
-    uint32_t program_image_size = 0;
+uint32_t program_image_size;
+uint8_t* program_image_buffer;
+uint32_t readProgramImage() {
+    FILE* fp = fopen("/opt/temp/ht_trace_snapshot/snapshot/mem_combined.bin", "rb");
     size_t bytes_read = 0;
     if (!fp)
         return OCSD_ERR_FILE_ERROR;
     fseek(fp, 0, SEEK_END);
     program_image_size = ftell(fp);
-    uint8_t* program_image_buffer = new (std::nothrow) uint8_t[program_image_size];
+    program_image_buffer = new (std::nothrow) uint8_t[program_image_size];
     if (!program_image_buffer) {
         fclose(fp);
         return OCSD_ERR_MEM;
@@ -69,17 +65,34 @@ uint32_t my_mem_acc_function(const void *p_context, const ocsd_vaddr_t address,
     rewind(fp);
     bytes_read = fread(program_image_buffer, 1, program_image_size, fp);
     fclose(fp);
-    if (bytes_read < (size_t)program_image_size)
+    if (bytes_read != (size_t)program_image_size)
         return OCSD_ERR_FILE_ERROR;
+    return 0;
+}
+
+uint32_t my_mem_acc_function(const void *p_context, const ocsd_vaddr_t address,
+        const ocsd_mem_space_acc_t mem_space, const uint8_t trcID, const uint32_t reqBytes, uint8_t *byteBuffer)
+{
+    //cout << "my_mem_acc_function" << endl;
+    //cout << "address = 0x" << hex << address << dec << endl;
+    //cout << "mem_space = " << mem_space << endl;
+    //cout << "trcID = 0x" << hex << static_cast<int>(trcID) << dec << endl;
+    //cout << "reqBytes = " << reqBytes << endl;
     
     uint32_t numBytes = 0;
-    for (numBytes = 0; numBytes < reqBytes, numBytes < program_image_size; numBytes++) {
-        *(byteBuffer + numBytes) = *(program_image_buffer + (address - 0x80000000) + numBytes);
+    uint32_t offset = (address - imageStartAddr);
+    uint32_t bytesToCopy = std::min(reqBytes, program_image_size);
+    if (imageStartAddr + bytesToCopy > imageEndAddr) {
+        cerr << "BUG" << endl;
+        return OCSD_ERR_MEM;
+    }
+    for (numBytes = 0; numBytes < bytesToCopy; numBytes++) {
+        *(byteBuffer + numBytes) = *(program_image_buffer + offset + numBytes);
     }
 
-    delete [] program_image_buffer;
+    //delete [] program_image_buffer;
 
-    cout << "return numBytes = " << numBytes << endl;
+    //cout << "return numBytes = " << numBytes << endl;
     return numBytes;
 }
 
@@ -87,16 +100,19 @@ ocsd_datapath_resp_t my_decoder_output_processor(const void *p_context,
                                                  const ocsd_trc_index_t index_sop, 
                                                  const uint8_t trc_chan_id, 
                                                  const ocsd_generic_trace_elem *elem) {
-    std::ostringstream oss;
-    oss << "Idx:" << index_sop << "; ID:" << std::hex << (uint32_t)trc_chan_id << "; ";
-    std::string elemStr = ocsd_generic_trace_elem_to_string(elem);
-    oss << elemStr << std::endl;
-    cout << oss.str() << endl;
+    // std::ostringstream oss;
+    // oss << "Idx:" << index_sop << "; ID:" << std::hex << (uint32_t)trc_chan_id << "; ";
+    // std::string elemStr = ocsd_generic_trace_elem_to_string(elem);
+    // oss << elemStr << std::endl;
+    // cout << oss.str() << endl;
     return OCSD_RESP_CONT;
 }
 
 int main() {
     cout << "Start" << endl;
+
+    if (readProgramImage())
+        return 1;
 
     dcd_tree_handle_t dcdtree_handle = ocsd_create_dcd_tree(OCSD_TRC_SRC_SINGLE, NO_FORMATTER_FLAGS);
 
@@ -138,8 +154,8 @@ int main() {
     
     // OCSD_C_API ocsd_err_t ocsd_dt_add_callback_trcid_mem_acc(const dcd_tree_handle_t handle, const ocsd_vaddr_t st_address,
     // const ocsd_vaddr_t en_address, const ocsd_mem_space_acc_t mem_space, Fn_MemAccID_CB p_cb_func, const void *p_context);
-    const ocsd_vaddr_t st_address = 0x80000000;
-    const ocsd_vaddr_t en_address = 0x80000023;
+    const ocsd_vaddr_t st_address = imageStartAddr;
+    const ocsd_vaddr_t en_address = imageEndAddr - 1;
     ret = ocsd_dt_add_callback_trcid_mem_acc(dcdtree_handle, st_address, en_address, OCSD_MEM_SPACE_ANY, my_mem_acc_function, p_context);
     if (ret != OCSD_OK) {
         cerr << "ret = " << ret << endl;
@@ -153,7 +169,7 @@ int main() {
     ocsd_datapath_resp_t dataPathResp = OCSD_RESP_CONT;
     uint32_t trace_index = 0;
 
-    std::string filepath = "simple_juno_trace/etm_dump/ETM_0_6_0.bin";
+    std::string filepath = "/opt/temp/ht_trace_snapshot/trace_dump/A53MP-ETM_0_0.bin";
     std::ifstream file(filepath, std::ios::binary | std::ios::ate);
     if (!file) {
         cerr << "Could not open file: " << filepath << endl;
@@ -169,13 +185,13 @@ int main() {
     }
 
     uint8_t* etmBufPos = (uint8_t*)buffer.data();
-    const uint32_t chunkSize = 8;
+    const uint32_t chunkSize = 4096;
     uint32_t dataThisIteration = 0;
     uint32_t nUsedThisTime = 0;
     uint32_t etmDataRemaining = size;
     while (etmDataRemaining > 0) {
         dataThisIteration = std::min(chunkSize, etmDataRemaining);
-        cout << "\n> dataThisIteration = " << dataThisIteration << endl;
+        //cout << "\n> dataThisIteration = " << dataThisIteration << endl;
         dataPathResp = ocsd_dt_process_data(dcdtree_handle,
                                     OCSD_OP_DATA,
                                     trace_index,
@@ -185,7 +201,7 @@ int main() {
 
         etmBufPos += nUsedThisTime;
         etmDataRemaining -= nUsedThisTime;
-        cout << " -> dataPathResp = " << ocsd_datapath_resp_t_as_string(dataPathResp) << endl;
+        //cout << " -> dataPathResp = " << ocsd_datapath_resp_t_as_string(dataPathResp) << endl;
         if (dataPathResp != OCSD_RESP_CONT) {
             cerr << " -----> Exiting early as dataPathResp != OCSD_RESP_CONT" << endl;
             break;
