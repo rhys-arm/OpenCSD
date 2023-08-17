@@ -1,4 +1,12 @@
 %module(directors="1") jopencsd
+
+// We want proper Java enums
+%include "enums.swg"
+// We want constants translated directly into Java code
+%javaconst(1);
+// except for this awkward one
+%javaconst(0) OCSD_VA_MASK;
+
 %{
 #include "trc_pkt_types_etmv4.h"
 
@@ -110,13 +118,4 @@ int64_t ocsd_generic_trace_elem_st_addr_as_long(const ocsd_generic_trace_elem* e
 {
   return elem->st_addr;
 }
-
-bool ocsd_generic_trace_elem_is_trace_on(const ocsd_generic_trace_elem* elem)
-{return elem->elem_type == OCSD_GEN_TRC_ELEM_TRACE_ON;}
-bool ocsd_generic_trace_elem_is_range(const ocsd_generic_trace_elem* elem)
-{return elem->elem_type == OCSD_GEN_TRC_ELEM_INSTR_RANGE;}
-bool ocsd_generic_trace_elem_is_pe_context(const ocsd_generic_trace_elem* elem)
-{return elem->elem_type == OCSD_GEN_TRC_ELEM_PE_CONTEXT;}
-bool ocsd_generic_trace_elem_is_exception(const ocsd_generic_trace_elem* elem)
-{return elem->elem_type == OCSD_GEN_TRC_ELEM_EXCEPTION;}
 %}
