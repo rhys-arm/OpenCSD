@@ -13,6 +13,12 @@ add_library(logger SHARED
     ${LIB_SRC_DIR}/logger.cpp
 )
 
+if(WIN32)
+    target_compile_definitions(logger PRIVATE
+        logger_EXPORTS
+    )
+endif()
+
 # set_target_properties(logger
 #     PROPERTIES NO_SONAME 1
 # )
