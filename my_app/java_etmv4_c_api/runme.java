@@ -67,10 +67,10 @@ public class runme {
 
     System.out.println("CSID = " + jopencsd.unsigned_char_ptr_value(CSID));
 
-      Callback2 callback2 = new JavaCallback2();
+      MemAccCallback MemAccCallback = new JavaMemAccCallback();
       SWIGTYPE_p_void nothing = null;
       ret = jopencsd.ocsd_dt_add_callback_trcid_mem_acc_wrapper(handle, BigInteger.valueOf(0x80000000L), BigInteger.valueOf(0x80000023L),
-                         ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, callback2, nothing);
+                         ocsd_mem_space_acc_t.OCSD_MEM_SPACE_ANY, MemAccCallback, nothing);
       if (ret != ocsd_err_t.OCSD_OK) {
         throw new RuntimeException();
       }
@@ -81,7 +81,7 @@ public class runme {
         throw new RuntimeException();
       }
 
-    Callback callback = new JavaCallback();
+    DecodedTraceCallback callback = new JavaCallback();
     ret = jopencsd.ocsd_dt_set_gen_elem_outfn_wrapper(handle, callback, nothing);
     if (ret != ocsd_err_t.OCSD_OK) {
       throw new RuntimeException();
@@ -109,7 +109,7 @@ public class runme {
 
 }
 
-class JavaCallback extends Callback {
+class JavaCallback extends DecodedTraceCallback {
 
   public ocsd_datapath_resp_t my_decoder_output_processor(SWIGTYPE_p_void p_context, long index_sop, short trc_chan_id,
       ocsd_generic_trace_elem elem) {
@@ -121,7 +121,7 @@ class JavaCallback extends Callback {
 
 }
 
-class JavaCallback2 extends Callback2 {
+class JavaMemAccCallback extends MemAccCallback {
 
   public long my_mem_acc_function(SWIGTYPE_p_void p_context, java.math.BigInteger address, ocsd_mem_space_acc_t mem_space,
                   short trcID, long reqBytes, SWIGTYPE_p_unsigned_char byteBuffer) {
