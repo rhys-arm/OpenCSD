@@ -7,57 +7,60 @@
 // except for this awkward one
 %javaconst(0) OCSD_VA_MASK;
 
+%include "std_string.i"
+%include "stdint.i"
+
 %{
 #include "trc_pkt_types_etmv4.h"
 
 #include "opencsd_c_api.h"
 
-#include "Callback.h"
+#include "DecodedTraceCallback.h"
 
-static Callback *handler_ptr = NULL;
+static DecodedTraceCallback *decodedTraceCallbackHandler_ptr = NULL;
 
 static ocsd_datapath_resp_t my_decoder_output_processor_helper(const void *p_context, 
                                                  const ocsd_trc_index_t index_sop, 
                                                  const uint8_t trc_chan_id, 
                                                  const ocsd_generic_trace_elem *elem) {
-  // Make the call up to the target language when handler_ptr
+  // Make the call up to the target language when decodedTraceCallbackHandler_ptr
   // is an instance of a target language director class
-  return handler_ptr->my_decoder_output_processor(p_context, 
+  return decodedTraceCallbackHandler_ptr->my_decoder_output_processor(p_context, 
                                                  index_sop, 
                                                  trc_chan_id, 
                                                  elem);
 }
-
-
-#include "Callback2.h"
-static Callback2 *handler_ptr2 = NULL;
-
-uint32_t my_mem_acc_function_helper(const void *p_context, const ocsd_vaddr_t address,
-        const ocsd_mem_space_acc_t mem_space, const uint8_t trcID, const uint32_t reqBytes, uint8_t *byteBuffer)
-{
-    return handler_ptr2->my_mem_acc_function(p_context, address, mem_space, trcID, reqBytes, byteBuffer);
-}
-
 %}
 
-%include "std_string.i"
-%include "stdint.i"
-
 %inline %{
-OCSD_C_API ocsd_err_t ocsd_dt_set_gen_elem_outfn_wrapper(const dcd_tree_handle_t handle, Callback *handler, const void *p_context) {
-  handler_ptr = handler;
+OCSD_C_API ocsd_err_t ocsd_dt_set_gen_elem_outfn_wrapper(const dcd_tree_handle_t handle, DecodedTraceCallback *decodedTraceCallbackHandler, const void *p_context) {
+  decodedTraceCallbackHandler_ptr = decodedTraceCallbackHandler;
   ocsd_err_t result = ocsd_dt_set_gen_elem_outfn(handle, &my_decoder_output_processor_helper, p_context);
-  handler = NULL;
+  decodedTraceCallbackHandler = NULL;
   return result;
 }
 %}
 
+
+%{
+
+#include "MemAccCallback.h"
+static MemAccCallback *memAccCallbackHandler_ptr = NULL;
+
+uint32_t my_mem_acc_function_helper(const void *p_context, const ocsd_vaddr_t address,
+        const ocsd_mem_space_acc_t mem_space, const uint8_t trcID, const uint32_t reqBytes, uint8_t *byteBuffer)
+{
+    return memAccCallbackHandler_ptr->my_mem_acc_function(p_context, address, mem_space, trcID, reqBytes, byteBuffer);
+}
+
+%}
+
 %inline %{
 OCSD_C_API ocsd_err_t ocsd_dt_add_callback_trcid_mem_acc_wrapper(const dcd_tree_handle_t handle, const ocsd_vaddr_t st_address, const ocsd_vaddr_t en_address,
-                          const ocsd_mem_space_acc_t mem_space, Callback2 *handler2, const void *p_context) {
-  handler_ptr2 = handler2;
+                          const ocsd_mem_space_acc_t mem_space, MemAccCallback *memAccCallbackHandler, const void *p_context) {
+  memAccCallbackHandler_ptr = memAccCallbackHandler;
   ocsd_err_t result = ocsd_dt_add_callback_trcid_mem_acc(handle, st_address, en_address, mem_space, &my_mem_acc_function_helper, p_context);
-  handler2 = NULL;
+  memAccCallbackHandler = NULL;
   return result;
 }
 %}
@@ -105,10 +108,10 @@ OCSD_C_API ocsd_err_t ocsd_dt_add_callback_trcid_mem_acc_wrapper(const dcd_tree_
 %pointer_functions(unsigned char, unsigned_char_ptr);
 %pointer_functions(uint32_t, uint32_t_ptr);
 
-%feature("director") Callback;
-%include "Callback.h"
-%feature("director") Callback2;
-%include "Callback2.h"
+%feature("director") DecodedTraceCallback;
+%include "DecodedTraceCallback.h"
+%feature("director") MemAccCallback;
+%include "MemAccCallback.h"
 
 %include "carrays.i"
 %array_functions(uint8_t, uint8_t_Array);
