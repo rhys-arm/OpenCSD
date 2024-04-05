@@ -43,6 +43,7 @@ set(STMOBJ_src_files
 )
 
 set(PKTPRNTOBJ_src_files
+    ${OPENCSD_SRCROOT_DIR}/decoder/source/pkt_printers/gen_elem_printer.cpp
     ${OPENCSD_SRCROOT_DIR}/decoder/source/pkt_printers/raw_frame_printer.cpp
     ${OPENCSD_SRCROOT_DIR}/decoder/source/pkt_printers/trc_print_fact.cpp
 )

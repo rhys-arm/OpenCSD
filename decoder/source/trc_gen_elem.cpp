@@ -131,7 +131,7 @@ std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* ele
 {
     std::ostringstream oss;
     int num_str = sizeof(s_elem_descs) / sizeof(s_elem_descs[0]);
-    int typeIdx = (int)this->elem_type;
+    int typeIdx = (int)(elem->elem_type);
     std::string strEx;
     if(typeIdx < num_str)
     {
@@ -154,7 +154,7 @@ std::string ocsd_generic_trace_elem_to_string(const ocsd_generic_trace_elem* ele
 
         case OCSD_GEN_TRC_ELEM_ADDR_NACC:
             // exception number overridden to give mem space associated with NACC result.
-            TrcMemAccessorBase::getMemAccSpaceString(strEx, (ocsd_mem_space_acc_t)exception_number);
+            TrcMemAccessorBase::getMemAccSpaceString(strEx, (ocsd_mem_space_acc_t)(elem->exception_number));
             oss << " 0x" << std::hex << elem->st_addr << "; Memspace [0x" << elem->exception_number << ":" << strEx << "] ";
             break;
 

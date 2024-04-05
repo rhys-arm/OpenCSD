@@ -196,7 +196,7 @@ typedef enum _ocsd_datapath_resp_t {
     OCSD_RESP_FATAL_SYS_ERR,       /**< Processing Fatal Error :  internal system error. */
 } ocsd_datapath_resp_t;
 
-inline const char* ocsd_datapath_resp_t_as_string(ocsd_datapath_resp_t datapath_resp) {
+static inline const char* ocsd_datapath_resp_t_as_string(ocsd_datapath_resp_t datapath_resp) {
     switch (datapath_resp) {
         case OCSD_RESP_CONT: return "OCSD_RESP_CONT";
         case OCSD_RESP_WARN_CONT: return "OCSD_RESP_WARN_CONT";
