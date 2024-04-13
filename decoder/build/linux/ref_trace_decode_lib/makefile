@@ -30,6 +30,8 @@
 # OpenCSD - makefile for main trace decode library
 #
 
+OS_NAME := $(shell uname -s)
+
 CXX := $(MASTER_CXX)
 LINKER := $(MASTER_LINKER)
 LIB := $(MASTER_LIB)
@@ -129,8 +131,12 @@ $(BUILD_DIR):
 $(LIB_TARGET_DIR)/$(LIB_NAME).a: $(OBJECTS) | $(BUILD_DIR) $(LIB_TARGET_DIR)
 	$(LIB) $(ARFLAGS) $(LIB_TARGET_DIR)/$(LIB_NAME).a $(OBJECTS)
 
+ifneq ($(OS_NAME),Darwin)
+    SONAME_LINKER_ARG := -Wl,-soname,$(LIB_NAME).so.$(SO_MAJOR_VER)
+endif
+
 $(LIB_TARGET_DIR)/$(LIB_NAME).so.$(SO_VER): $(OBJECTS) | $(BUILD_DIR) $(LIB_TARGET_DIR)
-	$(LINKER) $(LDFLAGS) -shared -o $(LIB_TARGET_DIR)/$(LIB_NAME).so.$(SO_VER) $(OBJECTS)
+	$(LINKER) $(LDFLAGS) -shared -o $(LIB_TARGET_DIR)/$(LIB_NAME).so.$(SO_VER) $(SONAME_LINKER_ARG) $(OBJECTS)
 
 $(LIB_TARGET_DIR)/$(LIB_NAME).so.$(SO_MAJOR_VER): $(LIBS) | $(LIB_TARGET_DIR)
 	( cd $(LIB_TARGET_DIR);  ln -sf $(LIB_NAME).so.$(SO_VER) $(LIB_NAME).so.$(SO_MAJOR_VER) )

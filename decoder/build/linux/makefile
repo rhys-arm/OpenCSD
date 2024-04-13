@@ -39,6 +39,13 @@ OCSD_ROOT := $(shell echo $(dir $(abspath $(lastword $(MAKEFILE_LIST)))) | sed '
 export OCSD_ROOT
 endif
 
+OS_NAME := $(shell uname -s)
+$(info $$OS_NAME is [${OS_NAME}])
+# ifeq ($(CXX),clang)
+#   COMPILER := "CLANG"
+#   $(info $$COMPILER is [${COMPILER}])
+# endif
+
 # library names
 LIB_BASE_NAME=opencsd
 export LIB_BASE_NAME
@@ -71,9 +78,15 @@ export INSTALL_INCLUDE_DIR=$(DESTDIR)$(PREFIX)/include/
 INSTALL_MAN_DIR=$(DESTDIR)$(PREFIX)/share/man/man1
 
 # compile flags
-CFLAGS += $(CPPFLAGS) -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC
-CXXFLAGS += $(CPPFLAGS) -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11
-LDFLAGS += -Wl,-undefined,error
+CFLAGS += $(CPPFLAGS) -c -Wall -Wno-switch -fPIC
+CXXFLAGS += $(CPPFLAGS) -c -Wall -Wno-switch -fPIC -std=c++11
+ifneq ($(OS_NAME),Darwin)
+	CFLAGS += -Wlogical-op
+	CXXFLAGS += -Wlogical-op
+	LDFLAGS += -Wl,-z,defs
+else
+	LDFLAGS += -Wl,-undefined,error
+endif
 ARFLAGS ?= rcs
 
 # debug variant
