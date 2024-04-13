@@ -73,7 +73,7 @@ INSTALL_MAN_DIR=$(DESTDIR)$(PREFIX)/share/man/man1
 # compile flags
 CFLAGS += $(CPPFLAGS) -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC
 CXXFLAGS += $(CPPFLAGS) -c -Wall -DLINUX -Wno-switch -Wlogical-op -fPIC -std=c++11
-LDFLAGS += -Wl,-z,defs
+LDFLAGS += -Wl,-undefined,error
 ARFLAGS ?= rcs
 
 # debug variant
