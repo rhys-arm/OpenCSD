@@ -12,7 +12,7 @@ mv DecodedTraceCallback.h.keep DecodedTraceCallback.h
 mv MemAccCallback.h.keep MemAccCallback.h
 
 mkdir -p com/arm/debug/trace/decode/jopencsd
-SWIG_LIB=swig-4.4.1/Lib  ./swig-4.4.1/swig -java -package com.arm.debug.trace.decode.jopencsd -outdir com/arm/debug/trace/decode/jopencsd -c++ -I../decoder/include -I../decoder/include/opencsd -I../decoder/include/opencsd/c_api -I../decoder/include/common -I../decoder/include/interfaces -I../decoder/include/opencsd/etmv4 -I../decoder/include/opencsd/etmv3 -I../decoder/include/pkt_printers jopencsd.i
+SWIG_LIB=swig-4.4.1/Lib  ./swig-4.4.1/swig -java -package com.arm.debug.trace.decode.jopencsd -outdir com/arm/debug/trace/decode/jopencsd -c++ -I../decoder/include -I../decoder/include/opencsd -I../decoder/include/opencsd/c_api -I../decoder/include/common -I../decoder/include/interfaces -I../decoder/include/opencsd/etmv4 -I../decoder/include/opencsd/etmv3 -I../decoder/include/opencsd/ete -I../decoder/include/pkt_printers jopencsd.i
 
 DS_JOPENCSD_DIR=/opt/ds/product/plugins/debugger/com.arm.debug.trace/src/com/arm/debug/trace/decode/jopencsd
 rm -rf $DS_JOPENCSD_DIR
@@ -22,7 +22,8 @@ cp com/arm/debug/trace/decode/jopencsd/* $DS_JOPENCSD_DIR
 # build jopencsd
 cd $SCRIPT_DIR/decoder/build/linux
 make -j$(nproc)
-# cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
+cd $SCRIPT_DIR
+cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
 
 # run java program
 cd $SCRIPT_DIR/my_app/java_etmv4_c_api

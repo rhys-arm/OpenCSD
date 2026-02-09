@@ -26,6 +26,12 @@ target_compile_definitions(jopencsd PRIVATE
 	_OCSD_C_API_DLL_EXPORT
 )
 
+find_library(OPENCSD_C_API_LIB
+    NAMES libopencsd_c_api.so PATHS ${OPENCSD_SRCROOT_DIR}/decoder/tests/bin/builddir
+    NO_CMAKE_FIND_ROOT_PATH
+    REQUIRED
+)
+
 target_link_libraries(jopencsd PRIVATE
-	opencsd_c_api
+	${OPENCSD_C_API_LIB}
 )
