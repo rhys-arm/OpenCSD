@@ -1,0 +1,1 @@
+Arm Debugger has generated this trace dump data set. The intention is that in a future release the Arm Debugger will be able to directly consume this data set. Until then, this data set must be converted into a Snapshot viewer compatible format before it can be used by Arm Debugger.

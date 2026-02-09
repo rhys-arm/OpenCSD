@@ -1,0 +1,8 @@
+LOAD 0x80000000
+{
+    EXEC +0
+    {
+        a64_main.o (A64_main, +FIRST)
+        * (+RO, +RW, +ZI)
+    }
+}
